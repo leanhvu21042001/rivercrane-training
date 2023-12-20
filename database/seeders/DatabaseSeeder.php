@@ -14,11 +14,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([UserSeeder::class]);
+
+        // ****** Init Example of Laravel ****** //
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        // ****** Init Example of Laravel ****** //
     }
 }
