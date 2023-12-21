@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +18,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+
+
+Route::middleware(['XSS'])->prefix('admin')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('showLogin');
+    Route::post('/login', [LoginController::class, 'doLogin'])->name('doLogin');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    // managers
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('product', ProductController::class);
+    });
 });

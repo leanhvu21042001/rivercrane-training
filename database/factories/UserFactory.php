@@ -26,7 +26,7 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' =>  $password ?: $password = bcrypt('secret'),
+            'password' =>  $password ?: $password = bcrypt('123'),
             'remember_token' => Str::random(100),
             'verify_email' => fake()->randomElement([null, fake()->unique()->safeEmail()]),
             'is_active' => fake()->randomElement([0, 1]),
