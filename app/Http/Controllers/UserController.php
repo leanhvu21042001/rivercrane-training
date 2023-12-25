@@ -15,9 +15,15 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // $request->get('perPage');
-            // defaultPerPage = per_page = 10
-            $paginate = User::where('is_delete', 0)->orderByDesc('created_at')->paginate(10);
+            // default PerPage = 10
+            $perPage = $request->get('perPage') ?? 10;
+            $paginate = User::where('is_delete', 0)->orderByDesc('created_at')->paginate($perPage);
+
+            $paginate->getCollection()->transform(function ($user) {
+                $user->active_text = $user->is_active ? 'Đang hoạt động' : 'Tạm khóa';
+                return $user;
+            });
+
             return response()->json([
                 'paginate' => $paginate
             ]);
