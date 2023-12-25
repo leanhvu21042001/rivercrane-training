@@ -15,10 +15,30 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // default PerPage = 10
             $perPage = $request->get('perPage') ?? 10;
-            $paginate = User::where('is_delete', 0)->orderByDesc('created_at')->paginate($perPage);
+            $name = $request->get('name') ?? '';
+            $email = $request->get('email') ?? '';
+            // $role = $request->get('role') ?? '';
+            $status = $request->get('status') ?? '';
 
+            $users = User::where('is_delete', 0)
+                ->orderByDesc('created_at');
+
+            // Handle Filter, Search
+            if (!empty($name)) {
+                $users->where('name', 'LIKE', "%$name%");
+            }
+            if (!empty($email)) {
+                $users->where('email', 'LIKE', "%$email%");
+            }
+            // if (!empty($role)) {
+            //     $users->where('role', 'LIKE', "%$role%");
+            // }
+            if (isset($status) && $status !== '') {
+                $users->where('is_active', '=', $status);
+            }
+
+            $paginate = $users->paginate($perPage);
             $paginate->getCollection()->transform(function ($user) {
                 $user->active_text = $user->is_active ? 'Đang hoạt động' : 'Tạm khóa';
                 return $user;

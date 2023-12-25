@@ -13,25 +13,27 @@
     </div>
 
     <div class="container filter">
-      <div class="pb-4">
+      <form id="search-form" class="pb-4">
         <div class="row my-3 fields">
           <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <div>
               <label for="name" class="form-label">Tên</label>
-              <input type="text" class="form-control" id="name" placeholder="Nhập họ tên">
+              <input type="text" class="form-control" id="name" name="name" placeholder="Nhập họ tên">
             </div>
           </div>
           <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <div>
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Nhập email">
+              <input class="form-control" id="email" name="email" placeholder="Nhập email">
+              {{-- Depended on Customer Requirement --}}
+              {{-- <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email"> --}}
             </div>
           </div>
           <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <div>
               <label for="role" class="form-label">Nhóm</label>
-              <select class="form-select" id="role">
-                <option value="default" selected>Mặc định</option>
+              <select class="form-select" id="role" name="role">
+                <option value="" selected>Mặc định</option>
                 <option value="admin">Admin</option>
                 <option value="editor">Editor</option>
                 <option value="reviewer">Reviewer</option>
@@ -40,9 +42,9 @@
           </div>
           <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
             <div>
-              <label for="role" class="form-label">Trạng thái</label>
-              <select class="form-select" id="role">
-                <option value="default" selected>Mặc định</option>
+              <label for="status" class="form-label">Trạng thái</label>
+              <select class="form-select" id="status" name="status">
+                <option value="" selected>Mặc định</option>
                 <option value="0">Tạm khóa</option>
                 <option value="1">Đang Hoạt động</option>
               </select>
@@ -50,7 +52,7 @@
           </div>
         </div>
 
-        <div class="row my-3 actions ">
+        <div class="row my-3 actions">
           <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 col left">
             <button class="btn btn-primary">
               <i class="fa-solid fa-user-plus"></i>
@@ -59,18 +61,18 @@
           </div>
 
           <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 col right text-end">
-            <button class="btn btn-primary ms-3">
+            <button type="submit" class="btn btn-primary ms-3">
               <i class="fa-solid fa-magnifying-glass"></i>
               <span>Tìm kiếm</span>
             </button>
 
-            <button class="btn btn-success ms-3">
+            <button type="reset" id="clear-search" class="btn btn-success ms-3">
               <i class="fa-solid fa-delete-left"></i>
               <span>Xóa tìm</span>
             </button>
           </div>
         </div>
-      </div>
+      </form>
 
 
       <div>
@@ -80,19 +82,22 @@
         </p>
 
         <!-- main datatable -->
-        <table class="table table-striped" id="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Họ tên</th>
-              <th scope="col">Email</th>
-              <th scope="col">Nhóm</th>
-              <th scope="col">Trạng Thái</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody id="table-body"></tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-striped" id="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Họ tên</th>
+                <th scope="col">Email</th>
+                <th scope="col">Nhóm</th>
+                <th scope="col">Trạng Thái</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+
 
         <div class="row">
 
@@ -124,11 +129,62 @@
     <script>
       let perPage = 10;
       let page = 1;
+      let name = '';
+      let email = '';
+      let role = '';
+      let status = '';
+
+      // Helper: get data from form.
+      const getData = (event) => {
+        const target = event.target;
+        const inputNames = [];
+        const formData = new FormData(target);
+
+        for (const item of target) {
+          if (!item?.name) continue;
+          inputNames.push(item.name);
+        }
+
+        return inputNames.reduce((prevValue, currentValue) => {
+          return {
+            ...prevValue,
+            [currentValue]: formData.get(currentValue),
+          };
+        }, {});
+      };
+
+      // handle clear filter (search)
+      $('#clear-search').on('click', () => {
+        // Run with default parameters
+        renderDatatable();
+      });
+
+      // handle submit form
+      $('#search-form').on('submit', (event) => {
+        event.preventDefault();
+        const {
+          name: formName,
+          email: formEmail,
+          role: formRole,
+          status: formStatus,
+        } = getData(event);
+
+        // Store search
+        name = formName;
+        email = formEmail;
+        role = formRole;
+        status = formStatus;
+
+        // reset pagination
+        page = 1;
+
+        renderDatatable(page, perPage, name, email, role, status);
+      });
 
       // Handle change per_page
       $('#perPage').on('change', (event) => {
         perPage = event.target.value;
-        handleRenderDatatable(page, perPage);
+        renderDatatable(page, perPage, name, email, role, status);
       });
 
       // Handle click paginate
@@ -137,13 +193,20 @@
         if (pageConverted?.toString() === 'NaN') return;
 
         page = pageConverted;
-        handleRenderDatatable(page, perPage);
+        renderDatatable(page, perPage, name, email, role, status);
       });
 
-      const handleRenderDatatable = (page = 1, perPage = 10) => {
+      const renderDatatable = (
+        page = 1,
+        perPage = 10,
+        name = '',
+        email = '',
+        role = '',
+        status = ''
+      ) => {
         $.ajax({
           type: 'GET',
-          url: `{{ route('user.index') }}/?page=${page}&perPage=${perPage}`,
+          url: `{{ route('user.index') }}/?page=${page}&perPage=${perPage}&name=${name}&email=${email}&role=${role}&status=${status}`,
           dataType: 'json',
           success: function(response) {
             if (!response?.paginate?.data?.length) {
@@ -223,13 +286,14 @@
               </li>
             `)
           },
-          error: function(data) {
-            console.log(data);
+          error: function(error) {
+            alert('Không thể xử lý dữ liệu, nhấn F5 để làm mới trang web');
+            console.error(error);
           }
         });
       }
       // First render data
-      handleRenderDatatable(page, perPage);
+      renderDatatable(page, perPage, name, email, role, status);
     </script>
   </main>
 @endsection
