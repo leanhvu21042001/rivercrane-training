@@ -106,9 +106,8 @@
               <label for="perPage">Hiển thị</label>
               <select class="form-select form-select-sm w-auto" id="perPage">
                 <option value="10">10</option>
+                <option value="10">15</option>
                 <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="50">50</option>
               </select>
               <label for="perPage">đơn vị</label>
             </div>
@@ -213,6 +212,7 @@
               // No data to show
               $('#table-body').html(
                 "<tr class='text-center'><td colspan='5' class='fw-bold fs-3'>Không có dữ liệu</td></tr>")
+              $('#paginate').html(null);
               return;
             }
 
@@ -246,6 +246,12 @@
                 </tr>
                 `);
             });
+
+
+            if (total < 20) {
+              $('#paginate').html(null);
+              return;
+            }
 
             // Render pagination
             $('#paginate').html(null);
