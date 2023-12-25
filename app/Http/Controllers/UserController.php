@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -67,8 +68,30 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
+        if ($request->ajax()) {
+            $name = $request->input('name');
+            $email = $request->input('email');
+            $role = $request->input('role');
+            $status = $request->input('status');
+            $password = $request->input('password');
+
+            $created = User::create([
+                'name' => $name,
+                'email' => $email,
+                // 'role' => $role,
+                'status' => $status,
+                'password' => $password,
+            ]);
+
+            $created['password'] = null;
+
+            return response()->json([
+                'message' => "Created new user",
+                'user' => $created,
+            ]);
+        }
         //
     }
 
