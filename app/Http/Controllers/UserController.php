@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -123,7 +124,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         $name = $request->input('name');
         $email = $request->input('email');
@@ -131,16 +132,21 @@ class UserController extends Controller
         $status = $request->input('status');
         $password = $request->input('password');
 
-        $updated = User::where('id', '=', $id)->update([
-            'name' => $name,
-            'email' => $email,
-            // 'role' => $role,
-            'is_active' => $status,
-            'password' => $password,
-        ]);
+        $newRecord = array_filter(
+            [
+                'name' => $name,
+                'email' => $email,
+                // 'role' => $role,
+                'is_active' => $status,
+                'password' => $password,
+            ],
+            'strlen'
+        );
+
+        $updated = User::where('id', '=', $id)->update($newRecord);
 
         return response()->json([
-            'message' => "Updated new user",
+            'message' => "Updated user",
             'user' => $updated,
         ]);
     }

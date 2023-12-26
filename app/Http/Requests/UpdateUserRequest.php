@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,14 +22,24 @@ class UpdateUserRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        return [
+        $rules = [
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
             'role' => 'required',
             'status' => 'required',
         ];
+
+        $fields = $request->query('fields');
+
+        // If fields has any values
+        // only accept rules has contains in fields
+        if (isset($fields) && !empty($fields)) {
+            return array_intersect_key($rules, array_flip($fields));
+        }
+
+        return $rules;
     }
 }

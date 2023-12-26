@@ -96,8 +96,8 @@
               </div>
               <div class="mb-3">
                 <label for="passwordEditing" class="form-label">Password</label>
-                <input required type="passwordEditing" class="form-control" id="passwordEditing"
-                  name="passwordEditing" placeholder="Nhập password">
+                <input required type="password" class="form-control" id="passwordEditing" name="passwordEditing"
+                  placeholder="Nhập password">
               </div>
               <div class="mb-3">
                 <label for="confirmPasswordEditing" class="form-label">Confirm Password</label>
@@ -129,6 +129,33 @@
         </div>
       </div>
       <!-- End Modal Edit User -->
+
+
+      <!-- Modal Modal Block and unlock user -->
+      <div class="modal fade" id="staticBackdropBlockAndUnLock" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropBlockAndUnLockLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <form id="block-and-unlock-user-form" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropBlockAndUnLockLabel">Nhắc nhở</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <input type="hidden" class="form-control" id="userIdToggleActive" name="userId">
+              <input type="hidden" class="form-control" id="isActiveToggleActive" name="status">
+
+              <p class="fs-3 text-center content-toggle-block"></p>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="submit" class="btn btn-primary">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- End Modal Block and unlock user -->
 
       <form id="search-form" class="pb-4">
         <div class="row my-3 fields">
@@ -245,113 +272,114 @@
     </div>
 
     <script>
-      let perPage = 10;
-      let page = 1;
-      let name = '';
-      let email = '';
-      let role = '';
-      let status = '';
+      $(document).ready(() => {
+        let perPage = 10;
+        let page = 1;
+        let name = '';
+        let email = '';
+        let role = '';
+        let status = '';
 
-      // Helper: get data from form.
-      const getData = (event) => {
-        const target = event.target;
-        const inputNames = [];
-        const formData = new FormData(target);
+        // Helper: get data from form.
+        const getData = (event) => {
+          const target = event.target;
+          const inputNames = [];
+          const formData = new FormData(target);
 
-        for (const item of target) {
-          if (!item?.name) continue;
-          inputNames.push(item.name);
-        }
+          for (const item of target) {
+            if (!item?.name) continue;
+            inputNames.push(item.name);
+          }
 
-        return inputNames.reduce((prevValue, currentValue) => {
-          return {
-            ...prevValue,
-            [currentValue]: formData.get(currentValue),
-          };
-        }, {});
-      };
+          return inputNames.reduce((prevValue, currentValue) => {
+            return {
+              ...prevValue,
+              [currentValue]: formData.get(currentValue),
+            };
+          }, {});
+        };
 
-      // handle clear filter (search)
-      $('#clear-search').on('click', () => {
-        // Run with default parameters
-        renderDatatable();
-      });
+        // handle clear filter (search)
+        $('#clear-search').on('click', () => {
+          // Run with default parameters
+          renderDatatable();
+        });
 
-      // handle submit form
-      $('#search-form').on('submit', (event) => {
-        event.preventDefault();
-        const {
-          name: formName,
-          email: formEmail,
-          role: formRole,
-          status: formStatus,
-        } = getData(event);
+        // handle submit form
+        $('#search-form').on('submit', (event) => {
+          event.preventDefault();
+          const {
+            name: formName,
+            email: formEmail,
+            role: formRole,
+            status: formStatus,
+          } = getData(event);
 
-        // Store search
-        name = formName;
-        email = formEmail;
-        role = formRole;
-        status = formStatus;
+          // Store search
+          name = formName;
+          email = formEmail;
+          role = formRole;
+          status = formStatus;
 
-        // reset pagination
-        page = 1;
+          // reset pagination
+          page = 1;
 
-        renderDatatable(page, perPage, name, email, role, status);
-      });
+          renderDatatable(page, perPage, name, email, role, status);
+        });
 
-      // Handle change per_page
-      $('#perPage').on('change', (event) => {
-        perPage = event.target.value;
-        renderDatatable(page, perPage, name, email, role, status);
-      });
+        // Handle change per_page
+        $('#perPage').on('change', (event) => {
+          perPage = event.target.value;
+          renderDatatable(page, perPage, name, email, role, status);
+        });
 
-      // Handle click paginate
-      $('#paginate').on('click', (event) => {
-        const pageConverted = Number(event.target.dataset.page);
-        if (pageConverted?.toString() === 'NaN') return;
+        // Handle click paginate
+        $('#paginate').on('click', (event) => {
+          const pageConverted = Number(event.target.dataset.page);
+          if (pageConverted?.toString() === 'NaN') return;
 
-        page = pageConverted;
-        renderDatatable(page, perPage, name, email, role, status);
-      });
+          page = pageConverted;
+          renderDatatable(page, perPage, name, email, role, status);
+        });
 
-      const renderDatatable = (
-        page = 1,
-        perPage = 10,
-        name = '',
-        email = '',
-        role = '',
-        status = ''
-      ) => {
-        $.ajax({
-          type: 'GET',
-          url: `{{ route('user.index') }}/?page=${page}&perPage=${perPage}&name=${name}&email=${email}&role=${role}&status=${status}`,
-          dataType: 'json',
-          success: function(response) {
-            const paginate = response?.paginate ?? {};
-            const total = paginate.total ?? 0;
-            const from = paginate.from ?? 0;
-            const to = paginate.to ?? 0;
-            const lastPage = paginate.last_page ?? 0;
-            const links = paginate.links ?? [];
-            const items = paginate.data ?? [];
+        const renderDatatable = (
+          page = 1,
+          perPage = 10,
+          name = '',
+          email = '',
+          role = '',
+          status = ''
+        ) => {
+          $.ajax({
+            type: 'GET',
+            url: `{{ route('user.index') }}/?page=${page}&perPage=${perPage}&name=${name}&email=${email}&role=${role}&status=${status}`,
+            dataType: 'json',
+            success: function(response) {
+              const paginate = response?.paginate ?? {};
+              const total = paginate.total ?? 0;
+              const from = paginate.from ?? 0;
+              const to = paginate.to ?? 0;
+              const lastPage = paginate.last_page ?? 0;
+              const links = paginate.links ?? [];
+              const items = paginate.data ?? [];
 
-            $('#from').html(from);
-            $('#to').html(to);
-            $('#total').html(total);
+              $('#from').html(from);
+              $('#to').html(to);
+              $('#total').html(total);
 
-            if (!paginate?.data?.length) {
-              // No data to show
-              $('#table-body').html(
-                "<tr class='text-center'><td colspan='5' class='fw-bold fs-3'>Không có dữ liệu</td></tr>")
-              $('#paginate').html(null);
-              return;
-            }
+              if (!paginate?.data?.length) {
+                // No data to show
+                $('#table-body').html(
+                  "<tr class='text-center'><td colspan='5' class='fw-bold fs-3'>Không có dữ liệu</td></tr>")
+                $('#paginate').html(null);
+                return;
+              }
 
 
-            // Render table data
-            $('#table-body').html(null);
-            $.each(items, (index, user) => {
-              $('#table-body').append(`
+              // Render table data
+              $('#table-body').html(null);
+              $.each(items, (index, user) => {
+                $('#table-body').append(`
                 <tr>
                   <th scope="row">${user?.id}</th>
                   <td>${user?.name}</td>
@@ -363,231 +391,298 @@
                       <i class="fa-solid fa-pen text-white btnEditUser" data-userId=${user?.id}></i>
                     </button>
                     <button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-                    <button class="btn btn-info"><i class="fa-solid fa-user-xmark text-white"></i></button>
+                    <button class="btn btn-dark btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active} data-bs-toggle="modal" data-bs-target="#staticBackdropBlockAndUnLock">
+                       ${user?.is_active ?
+                        `<i class="fa-solid fa-unlock text-white btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`
+                        :`<i class="fa-solid fa-lock text-warning btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`}
+                    </button>
                   </td>
                 </tr>
                 `);
-            });
+              });
 
 
-            if (total < 20) {
+              if (total < 20) {
+                $('#paginate').html(null);
+                return;
+              }
+
+              // Render pagination
               $('#paginate').html(null);
-              return;
-            }
+              $.each(links, (index, link) => {
 
-            // Render pagination
-            $('#paginate').html(null);
-            $.each(links, (index, link) => {
+                const page = link?.url?.split('page=').at(1);
 
-              const page = link?.url?.split('page=').at(1);
-
-              if (index === 0) {
-                $('#paginate').append(`
+                if (index === 0) {
+                  $('#paginate').append(`
                     <li class="page-item${link.active ? ' active' : ''}" data-page="${page}">
                         <a href="#!" class="page-link" aria-label="Previous" data-page="${page}">
                             <span aria-hidden="true" data-page="${page}">&lt;</span>
                         </a>
                     </li>
                   `);
-              } else if (index === links.length - 1) {
-                $('#paginate').append(`
+                } else if (index === links.length - 1) {
+                  $('#paginate').append(`
                     <li class="page-item${link.active ? ' active' : ''}" data-page="${page}">
                         <a href="#!" class="page-link" aria-label="Next" data-page="${page}">
                             <span aria-hidden="true" data-page="${page}">&gt;</span>
                         </a>
                     </li>
                   `);
-              } else {
-                $('#paginate').append(`
+                } else {
+                  $('#paginate').append(`
                   <li class="page-item${link.active ? ' active' : ''}" ${link.active ? 'aria-current="page"' : ''} data-page="${page}">
                       <a href="#!" class="page-link" data-page="${page}">${link.label}</a>
                   </li>
-                  `);
-              }
-            });
+                `);
+                }
+              });
 
-            $('#paginate').append(`
+              $('#paginate').append(`
               <li class="page-item" data-page="${lastPage}">
                 <a href="#!" class="page-link" aria-label="Next" data-page="${lastPage}">
                   <span aria-hidden="true" data-page="${lastPage}">&gt;&gt;</span>
                 </a>
               </li>
-            `)
-          },
-          error: function(error) {
-            alert('Không thể xử lý dữ liệu, nhấn F5 để làm mới trang web');
-            console.error(error);
-          }
-        });
-      }
-      // First render data
-      renderDatatable(page, perPage, name, email, role, status);
-
-
-      //* ++++++++++++++++++++ HANDLE ADD NEW USER ++++++++++++++++++++ *//
-      const handleComparePassword = (password, confirmPassword, target = '#password-error-text') => {
-        if (password === confirmPassword) {
-          $(target).html(null)
-          return false;
-        } else {
-          $(target).html('Mật khẩu không trùng khớp')
-          return true;
+            `);
+            },
+            error: function(error) {
+              alert('Không thể xử lý dữ liệu, nhấn F5 để làm mới trang web');
+              console.error(error);
+            }
+          });
         }
-      }
+        // First render data
+        renderDatatable(page, perPage, name, email, role, status);
 
-      // get modal want to close.
-      const staticBackdropAddNew = new bootstrap.Modal(document.getElementById('staticBackdropAddNew'), {
-        keyboard: false
-      });
 
-      let isError = false;
+        //* ++++++++++++++++++++ HANDLE ADD NEW USER ++++++++++++++++++++ *//
+        const handleComparePassword = (password, confirmPassword, target = '#password-error-text') => {
+          if (password === confirmPassword) {
+            $(target).html(null)
+            return false;
+          } else {
+            $(target).html('Mật khẩu không trùng khớp')
+            return true;
+          }
+        }
 
-      $('#password').on('keyup', ({
-        target
-      }) => {
-        isError = handleComparePassword(target.value, $('#confirmPassword').val())
-      });
+        // get modal want to close.
+        const staticBackdropAddNew = new bootstrap.Modal(document.getElementById('staticBackdropAddNew'), {
+          keyboard: false
+        });
 
-      $('#confirmPassword').on('keyup', ({
-        target
-      }) => {
-        isError = handleComparePassword($('#password').val(), target.value)
-      })
+        let isError = false;
 
-      $('#add-new-user-form').on('submit', (event) => {
-        event.preventDefault();
-        if (isError) return;
+        $('#password').on('keyup', ({
+          target
+        }) => {
+          isError = handleComparePassword(target.value, $('#confirmPassword').val())
+        });
 
-        const {
-          name,
-          email,
-          role,
-          status,
-          password,
-          confirmPassword
-        } = getData(event);
+        $('#confirmPassword').on('keyup', ({
+          target
+        }) => {
+          isError = handleComparePassword($('#password').val(), target.value)
+        })
 
-        $.ajax({
-          url: `{{ route('user.store') }}`,
-          type: 'POST',
-          data: {
+        $('#add-new-user-form').on('submit', (event) => {
+          event.preventDefault();
+          if (isError) return;
+
+          const {
             name,
             email,
             role,
             status,
             password,
-          },
-          success: function(response) {
-            renderDatatable();
-            event.target.reset();
-            staticBackdropAddNew?.hide();
-            alert('Tạo người dùng mới thành công');
-          },
-          error: function(error) {
-            alert('Không thể xử lý dữ liệu');
-            console.error(error);
-          }
-        });
-      });
+            confirmPassword
+          } = getData(event);
 
-      //* ++++++++++++++++++++ HANDLE UPDATE USER ++++++++++++++++++++ *//
-
-      // Get user data want to update.
-      $('#table-body').on('click', event => {
-        // If not the button show modal to edit. Break function.
-        const isBtnEditUser = event.target.classList.value.includes('btnEditUser');
-        if (!isBtnEditUser) return;
-
-        // set userId for hidden input
-        const userId = event.target.dataset.userid;
-        $('#userId').val(userId);
-
-        const url = `{{ route('user.edit', ['user' => ':userId']) }}`.replace(':userId', userId);
-
-        $.ajax({
-          type: 'GET',
-          url: url,
-          dataType: 'json',
-          success: function(response) {
-            const user = response.user ?? {};
-
-            $('#nameEditing').val(user?.name);
-            $('#emailEditing').val(user?.email);
-            $('#roleEditing').val(user?.role);
-            $('#statusEditing').val(user?.is_active);
-          },
-          error: function(error) {
-            alert('Không thể xử lý dữ liệu');
-            console.error(error);
-          }
+          $.ajax({
+            url: `{{ route('user.store') }}`,
+            type: 'POST',
+            data: {
+              name,
+              email,
+              role,
+              status,
+              password,
+            },
+            success: function(response) {
+              renderDatatable();
+              event.target.reset();
+              staticBackdropAddNew?.hide();
+              alert('Tạo người dùng mới thành công');
+            },
+            error: function(error) {
+              alert('Không thể xử lý dữ liệu');
+              console.error(error);
+            }
+          });
         });
 
-      });
+        //* ++++++++++++++++++++ HANDLE UPDATE USER ++++++++++++++++++++ *//
 
-      const staticBackdropUpdate = new bootstrap.Modal(document.getElementById('staticBackdropUpdate'), {
-        keyboard: false
-      });
+        // Get user data want to update.
+        $('#table-body').on('click', event => {
+          // If not the button show modal to edit and Break function.
+          const isBtnEditUser = event.target.classList.value.includes('btnEditUser');
+          if (!isBtnEditUser) return;
 
-      let isErrorEditing = false;
+          // set userId for hidden input
+          const userId = event.target.dataset.userid;
+          $('#userId').val(userId);
 
-      $('#passwordEditing').on('keyup', ({
-        target
-      }) => {
-        isErrorEditing = handleComparePassword(
-          target.value,
-          $('#confirmPasswordEditing').val(),
-          '#password-editing-error-text'
-        )
-      });
+          const url = `{{ route('user.edit', ['user' => ':userId']) }}`.replace(':userId', userId);
 
-      $('#confirmPasswordEditing').on('keyup', ({
-        target
-      }) => {
-        isErrorEditing = handleComparePassword(
-          $('#passwordEditing').val(),
-          target.value,
-          '#password-editing-error-text'
-        )
+          $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function(response) {
+              const user = response.user ?? {};
+
+              $('#nameEditing').val(user?.name);
+              $('#emailEditing').val(user?.email);
+              $('#roleEditing').val(user?.role);
+              $('#statusEditing').val(user?.is_active);
+              $('#passwordEditing').val(null);
+              $('#confirmPasswordEditing').val(null);
+            },
+            error: function(error) {
+              alert('Không thể xử lý dữ liệu');
+              console.error(error);
+            }
+          });
+        });
+
+        const staticBackdropUpdate = new bootstrap.Modal(document.getElementById('staticBackdropUpdate'), {
+          keyboard: false
+        });
+
+        let isErrorEditing = false;
+
+        $('#passwordEditing').on('keyup', ({
+          target
+        }) => {
+          isErrorEditing = handleComparePassword(
+            target.value,
+            $('#confirmPasswordEditing').val(),
+            '#password-editing-error-text'
+          )
+        });
+
+        $('#confirmPasswordEditing').on('keyup', ({
+          target
+        }) => {
+          isErrorEditing = handleComparePassword(
+            $('#passwordEditing').val(),
+            target.value,
+            '#password-editing-error-text'
+          )
+        })
+
+        $('#update-user-form').on('submit', (event) => {
+          event.preventDefault();
+          if (isErrorEditing) return;
+
+          const {
+            userId,
+            nameEditing,
+            emailEditing,
+            roleEditing,
+            statusEditing,
+            passwordEditing,
+            confirmPassworEditing
+          } = getData(event);
+
+          const url = `{{ route('user.update', ['user' => ':id']) }}`.replace(':id', userId);
+
+          $.ajax({
+            url: url,
+            type: 'PATCH',
+            data: {
+              name: nameEditing,
+              email: emailEditing,
+              role: roleEditing,
+              status: statusEditing,
+              password: passwordEditing,
+            },
+            success: function(response) {
+              renderDatatable();
+              event.target.reset();
+              staticBackdropUpdate?.hide();
+              alert('Cập nhập người dùng thành công');
+            },
+            error: function(error) {
+              alert('Không thể xử lý dữ liệu');
+              console.error(error);
+            }
+          });
+        });
+
+
+        //* ++++++++++++++++++++ HANDLE BLOCK AND UNBLOCK USER ++++++++++++++++++++ *//
+        const staticBackdropBlockAndUnLock = new bootstrap.Modal(document.getElementById(
+          'staticBackdropBlockAndUnLock'), {
+          keyboard: false
+        });
+
+        $('#table-body').on('click', event => {
+          // If not the button show modal to toggle block user and Break function.
+          const isBtnToggleBlockUser = event.target.classList.value.includes('btnToggleBlockUser')
+          if (isBtnToggleBlockUser) {
+            const {
+              userid: userId,
+              isactive: isActive
+            } = event.target.dataset ?? {};
+
+            if (Number(isActive) === 0) {
+              $('.content-toggle-block').html(
+                `Bạn có muốn <span class='fw-bolder'>mở khóa</span> <br/> thành viên <span class='fw-bolder'>${userId}</span> không`
+              );
+              $('#userIdToggleActive').val(userId);
+              $('#isActiveToggleActive').val(1);
+
+            } else if (Number(isActive) === 1) {
+              $('.content-toggle-block').html(
+                `Bạn có muốn <span class='fw-bolder'>khóa</span> <br/> thành viên <span class='fw-bolder'>${userId}</span> không`
+              );
+              $('#userIdToggleActive').val(userId);
+              $('#isActiveToggleActive').val(0);
+            }
+          }
+        });
+
+        $('#block-and-unlock-user-form').on('submit', event => {
+          event.preventDefault();
+
+          const {
+            userId,
+            status,
+          } = getData(event);
+          const url = `{{ route('user.update', ['user' => ':id']) }}?fields[]=status`.replace(':id', userId);
+
+          $.ajax({
+            url: url,
+            type: 'PATCH',
+            data: {
+              status: status,
+            },
+            success: function(response) {
+              renderDatatable();
+              event.target.reset();
+              staticBackdropBlockAndUnLock?.hide();
+              alert('Cập nhập người dùng thành công');
+            },
+            error: function(error) {
+              alert('Không thể xử lý dữ liệu');
+              console.error(error);
+            }
+          });
+        });
       })
-
-      $('#update-user-form').on('submit', (event) => {
-        event.preventDefault();
-        if (isErrorEditing) return;
-
-        const {
-          userId,
-          nameEditing,
-          emailEditing,
-          roleEditing,
-          statusEditing,
-          passwordEditing,
-          confirmPassworEditing
-        } = getData(event);
-
-        const url = `{{ route('user.update', ['user' => ':id']) }}`.replace(':id', userId);
-
-        $.ajax({
-          url: url,
-          type: 'PATCH',
-          data: {
-            name: nameEditing,
-            email: emailEditing,
-            role: roleEditing,
-            status: statusEditing,
-            password: passwordEditing,
-          },
-          success: function(response) {
-            renderDatatable();
-            event.target.reset();
-            staticBackdropUpdate?.hide();
-            alert('Cập nhập người dùng thành công');
-          },
-          error: function(error) {
-            alert('Không thể xử lý dữ liệu');
-            console.error(error);
-          }
-        });
-      });
     </script>
 
   </main>
