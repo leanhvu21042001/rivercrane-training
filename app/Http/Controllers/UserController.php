@@ -152,6 +152,24 @@ class UserController extends Controller
     }
 
     /**
+     * Set is_delete = true from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $deleted = User::where('id', '=', $id)->update([
+            'is_delete' => 1
+        ]);
+
+        return response()->json([
+            'message' => "Deleted user",
+            'user' => $deleted,
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

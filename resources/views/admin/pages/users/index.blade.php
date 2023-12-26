@@ -157,6 +157,32 @@
       </div>
       <!-- End Modal Block and unlock user -->
 
+
+      <!-- Modal Modal Delete user -->
+      <div class="modal fade" id="staticBackdropDeleteUser" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropDeleteUserLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <form id="delete-user-form" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropDeleteUserLabel">Nhắc nhở</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <input type="hidden" class="form-control" id="userIdDelete" name="userId">
+
+              <p class="fs-3 text-center content-delete"></p>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button type="submit" class="btn btn-primary">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- End Modal Delete user -->
+
       <form id="search-form" class="pb-4">
         <div class="row my-3 fields">
           <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
@@ -390,7 +416,11 @@
                     <button class="btn btn-warning btnEditUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropUpdate">
                       <i class="fa-solid fa-pen text-white btnEditUser" data-userId=${user?.id}></i>
                     </button>
-                    <button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+
+                    <button class="btn btn-danger btnDeleteUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteUser">
+                        <i class="fa-solid fa-trash-can btnDeleteUser" data-userId=${user?.id}></i>
+                    </button>
+
                     <button class="btn btn-dark btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active} data-bs-toggle="modal" data-bs-target="#staticBackdropBlockAndUnLock">
                        ${user?.is_active ?
                         `<i class="fa-solid fa-unlock text-white btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`
@@ -610,7 +640,7 @@
               password: passwordEditing,
             },
             success: function(response) {
-              renderDatatable();
+              renderDatatable(page, perPage, name, email, role, status);
               event.target.reset();
               staticBackdropUpdate?.hide();
               alert('Cập nhập người dùng thành công');
@@ -660,7 +690,7 @@
 
           const {
             userId,
-            status,
+            status: statusToggling,
           } = getData(event);
           const url = `{{ route('user.update', ['user' => ':id']) }}?fields[]=status`.replace(':id', userId);
 
@@ -668,10 +698,10 @@
             url: url,
             type: 'PATCH',
             data: {
-              status: status,
+              status: statusToggling,
             },
             success: function(response) {
-              renderDatatable();
+              renderDatatable(page, perPage, name, email, role, status);
               event.target.reset();
               staticBackdropBlockAndUnLock?.hide();
               alert('Cập nhập người dùng thành công');
@@ -682,6 +712,56 @@
             }
           });
         });
+
+        //* ++++++++++++++++++++ HANDLE DELETE USER ++++++++++++++++++++ *//
+        const staticBackdropDeleteUser = new bootstrap.Modal(document.getElementById(
+          'staticBackdropDeleteUser'), {
+          keyboard: false
+        });
+
+        $('#table-body').on('click', event => {
+          // If not the button show modal to toggle block user and Break function.
+          const isBtnDeleteUser = event.target.classList.value.includes('btnDeleteUser')
+          if (isBtnDeleteUser) {
+            const {
+              userid: userId,
+            } = event.target.dataset ?? {};
+
+            $('#userIdDelete').val(userId);
+            $('.content-delete').html(
+              `Bạn có muốn <span class='fw-bolder'>xóa</span><br/>
+              thành viên <span class='fw-bolder'>${userId}</span> không`
+            );
+          }
+        });
+
+        $('#delete-user-form').on('submit', event => {
+          event.preventDefault();
+
+          const {
+            userId,
+          } = getData(event);
+          const url = `{{ route('user.delete', ['user' => ':id']) }}`.replace(':id', userId);
+
+          $.ajax({
+            url: url,
+            type: 'PATCH',
+            data: {
+              status: status,
+            },
+            success: function(response) {
+              renderDatatable(page, perPage, name, email, role, status);
+              event.target.reset();
+              staticBackdropDeleteUser?.hide();
+              alert('Xóa người dùng thành công');
+            },
+            error: function(error) {
+              alert('Không thể xử lý dữ liệu');
+              console.error(error);
+            }
+          });
+        });
+
       })
     </script>
 
