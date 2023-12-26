@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique()->index();
             $table->string('password');
+            $table->string('group_role', 50);
             $table->rememberToken();
             $table->string('verify_email', 100)->nullable();
             $table->tinyInteger('is_active')->default(1)->comment('0: Không hoạt động , 1 : Hoạt động');

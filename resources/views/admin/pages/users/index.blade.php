@@ -410,7 +410,7 @@
                   <th scope="row">${user?.id}</th>
                   <td>${user?.name}</td>
                   <td>${user?.email}</td>
-                  <td>${user?.role ?? 'unknow'}</td>
+                  <td class="text-capitalize">${user?.group_role ?? 'unknow'}</td>
                   <td>${user?.active_text}</td>
                   <td class="d-flex flex-row flex-wrap gap-3">
                     <button class="btn btn-warning btnEditUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropUpdate">
@@ -575,7 +575,7 @@
 
               $('#nameEditing').val(user?.name);
               $('#emailEditing').val(user?.email);
-              $('#roleEditing').val(user?.role);
+              $('#roleEditing').val(user?.group_role);
               $('#statusEditing').val(user?.is_active);
               $('#passwordEditing').val(null);
               $('#confirmPasswordEditing').val(null);

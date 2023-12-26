@@ -20,7 +20,7 @@ class UserController extends Controller
             $perPage = $request->get('perPage') ?? 10;
             $name = $request->get('name') ?? '';
             $email = $request->get('email') ?? '';
-            // $role = $request->get('role') ?? '';
+            $role = $request->get('role') ?? '';
             $status = $request->get('status') ?? '';
 
             $users = User::where('is_delete', 0)
@@ -33,9 +33,9 @@ class UserController extends Controller
             if (!empty($email)) {
                 $users->where('email', 'LIKE', "%$email%");
             }
-            // if (!empty($role)) {
-            //     $users->where('role', 'LIKE', "%$role%");
-            // }
+            if (!empty($role)) {
+                $users->where('group_role', '=', $role);
+            }
             if (isset($status) && $status !== '') {
                 $users->where('is_active', '=', $status);
             }
@@ -80,7 +80,7 @@ class UserController extends Controller
         $created = User::create([
             'name' => $name,
             'email' => $email,
-            // 'role' => $role,
+            'group_role' => $role,
             'is_active' => $status,
             'password' => $password,
         ]);
@@ -136,7 +136,7 @@ class UserController extends Controller
             [
                 'name' => $name,
                 'email' => $email,
-                // 'role' => $role,
+                'group_role' => $role,
                 'is_active' => $status,
                 'password' => $password,
             ],

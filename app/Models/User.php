@@ -20,7 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'group_role',
         'remember_token',
         'verify_email',
         'is_active',
