@@ -70,29 +70,24 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if ($request->ajax()) {
-            $name = $request->input('name');
-            $email = $request->input('email');
-            $role = $request->input('role');
-            $status = $request->input('status');
-            $password = $request->input('password');
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $role = $request->input('role');
+        $status = $request->input('status');
+        $password = $request->input('password');
 
-            $created = User::create([
-                'name' => $name,
-                'email' => $email,
-                // 'role' => $role,
-                'status' => $status,
-                'password' => $password,
-            ]);
+        $created = User::create([
+            'name' => $name,
+            'email' => $email,
+            // 'role' => $role,
+            'is_active' => $status,
+            'password' => $password,
+        ]);
 
-            $created['password'] = null;
-
-            return response()->json([
-                'message' => "Created new user",
-                'user' => $created,
-            ]);
-        }
-        //
+        return response()->json([
+            'message' => "Created new user",
+            'user' => $created,
+        ]);
     }
 
     /**
@@ -114,7 +109,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::where('id', '=', $id)->first();
+
+        return response()->json([
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -126,7 +125,24 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $role = $request->input('role');
+        $status = $request->input('status');
+        $password = $request->input('password');
+
+        $updated = User::where('id', '=', $id)->update([
+            'name' => $name,
+            'email' => $email,
+            // 'role' => $role,
+            'is_active' => $status,
+            'password' => $password,
+        ]);
+
+        return response()->json([
+            'message' => "Updated new user",
+            'user' => $updated,
+        ]);
     }
 
     /**

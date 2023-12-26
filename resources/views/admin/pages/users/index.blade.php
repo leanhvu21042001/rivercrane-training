@@ -1,187 +1,251 @@
 @extends('admin.layout.layout')
 
 @section('title')
-User Manager Page
+  User Manager Page
 @endsection
 
 
 @section('content')
-<main class="d-flex flex-column">
+  <main class="d-flex flex-column">
 
-  <div class="container py-5">
-    <h1>Users</h1>
-  </div>
+    <div class="container py-5">
+      <h1>Users</h1>
+    </div>
 
-  <div class="container filter">
+    <div class="container filter">
 
-    <!-- Modal Add new -->
-    <div class="modal fade" id="staticBackdropAddNew" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="staticBackdropAddNewLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <form id="add-new-user-form" class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropAddNewLabel">Thêm người dùng mới</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
+      <!-- Modal Add new -->
+      <div class="modal fade" id="staticBackdropAddNew" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropAddNewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <form id="add-new-user-form" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropAddNewLabel">Thêm người dùng mới</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="name" class="form-label">Tên</label>
+                <input required type="text" class="form-control" id="name" name="name"
+                  placeholder="Nhập họ tên">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input required type="email" class="form-control" id="email" name="email"
+                  placeholder="Nhập email">
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input required type="password" class="form-control" id="password" name="password"
+                  placeholder="Nhập password">
+              </div>
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input required type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                  placeholder="Nhập Confirm password">
+                <span class="text-danger mt-2" id="password-error-text"></span>
+              </div>
+              <div class="mb-3">
+                <label for="role" class="form-label">Nhóm</label>
+                <select required class="form-select" id="role" name="role">
+                  <option value="admin">Admin</option>
+                  <option value="editor">Editor</option>
+                  <option value="reviewer">Reviewer</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select required class="form-select" id="status" name="status">
+                  <option value="1">Hoạt động</option>
+                  <option value="0">Tạm khóa</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- End Modal add new -->
+
+
+      <!-- Modal Edit User -->
+      <div class="modal fade" id="staticBackdropUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropUpdateLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <form id="update-user-form" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropUpdateLabel">Cập nhập thông tin người dùng</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <input type="hidden" class="form-control" id="userId" name="userId">
+
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="nameEditing" class="form-label">Tên</label>
+                <input required type="text" class="form-control" id="nameEditing" name="nameEditing"
+                  placeholder="Nhập họ tên">
+              </div>
+              <div class="mb-3">
+                <label for="emailEditing" class="form-label">Email</label>
+                <input required type="emailEditing" class="form-control" id="emailEditing" name="emailEditing"
+                  placeholder="Nhập email">
+              </div>
+              <div class="mb-3">
+                <label for="passwordEditing" class="form-label">Password</label>
+                <input required type="passwordEditing" class="form-control" id="passwordEditing"
+                  name="passwordEditing" placeholder="Nhập password">
+              </div>
+              <div class="mb-3">
+                <label for="confirmPasswordEditing" class="form-label">Confirm Password</label>
+                <input required type="password" class="form-control" id="confirmPasswordEditing"
+                  name="confirmPasswordEditing" placeholder="Nhập Confirm password">
+                <span class="text-danger mt-2" id="password-editing-error-text"></span>
+              </div>
+              <div class="mb-3">
+                <label for="roleEditing" class="form-label">Nhóm</label>
+                <select required class="form-select" id="roleEditing" name="roleEditing">
+                  <option value="admin">Admin</option>
+                  <option value="editor">Editor</option>
+                  <option value="reviewer">Reviewer</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="statusEditing" class="form-label">Trạng thái</label>
+                <select required class="form-select" id="statusEditing" name="statusEditing">
+                  <option value="1">Hoạt động</option>
+                  <option value="0">Tạm khóa</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- End Modal Edit User -->
+
+      <form id="search-form" class="pb-4">
+        <div class="row my-3 fields">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <div>
               <label for="name" class="form-label">Tên</label>
-              <input required type="text" class="form-control" id="name" name="name" placeholder="Nhập họ tên">
+              <input type="text" class="form-control" id="name" name="name" placeholder="Nhập họ tên">
             </div>
-            <div class="mb-3">
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <div>
               <label for="email" class="form-label">Email</label>
-              <input required type="email" class="form-control" id="email" name="email" placeholder="Nhập email">
+              <input class="form-control" id="email" name="email" placeholder="Nhập email">
+              {{-- Depended on Customer Requirement --}}
+              {{-- <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email">
+            --}}
             </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input required type="password" class="form-control" id="password" name="password"
-                placeholder="Nhập password">
-            </div>
-            <div class="mb-3">
-              <label for="confirmPassword" class="form-label">Confirm Password</label>
-              <input required type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                placeholder="Nhập Confirm password">
-              <span class="text-danger mt-2" id="password-error-text"></span>
-            </div>
-            <div class="mb-3">
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <div>
               <label for="role" class="form-label">Nhóm</label>
-              <select required class="form-select" id="role" name="role">
+              <select class="form-select" id="role" name="role">
+                <option value="" selected>Mặc định</option>
                 <option value="admin">Admin</option>
                 <option value="editor">Editor</option>
                 <option value="reviewer">Reviewer</option>
               </select>
             </div>
-            <div class="mb-3">
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+            <div>
               <label for="status" class="form-label">Trạng thái</label>
-              <select required class="form-select" id="status" name="status">
-                <option value="1">Hoạt động</option>
+              <select class="form-select" id="status" name="status">
+                <option value="" selected>Mặc định</option>
                 <option value="0">Tạm khóa</option>
+                <option value="1">Đang Hoạt động</option>
               </select>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-            <button type="submit" class="btn btn-primary">Lưu</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!-- End Modal add new -->
-
-    <form id="search-form" class="pb-4">
-      <div class="row my-3 fields">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <div>
-            <label for="name" class="form-label">Tên</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Nhập họ tên">
-          </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <div>
-            <label for="email" class="form-label">Email</label>
-            <input class="form-control" id="email" name="email" placeholder="Nhập email">
-            {{-- Depended on Customer Requirement --}}
-            {{-- <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email"> --}}
+
+        <div class="row my-3 actions">
+          <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 col left">
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+              data-bs-target="#staticBackdropAddNew">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Thêm mới</span>
+            </button>
+          </div>
+
+          <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 col right text-end">
+            <button type="submit" class="btn btn-primary ms-3">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Tìm kiếm</span>
+            </button>
+
+            <button type="reset" id="clear-search" class="btn btn-success ms-3">
+              <i class="fa-solid fa-delete-left"></i>
+              <span>Xóa tìm</span>
+            </button>
           </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <div>
-            <label for="role" class="form-label">Nhóm</label>
-            <select class="form-select" id="role" name="role">
-              <option value="" selected>Mặc định</option>
-              <option value="admin">Admin</option>
-              <option value="editor">Editor</option>
-              <option value="reviewer">Reviewer</option>
-            </select>
+      </form>
+
+
+      <div>
+        <p class="text-end">
+          Hiển thị từ <span id="from">1</span> ~ <span id="to">10</span> trong tổng số
+          <span id="total">100</span> user
+        </p>
+
+        <!-- main datatable -->
+        <div class="table-responsive">
+          <table class="table table-striped" id="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Họ tên</th>
+                <th scope="col">Email</th>
+                <th scope="col">Nhóm</th>
+                <th scope="col">Trạng Thái</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+
+
+        <div class="row">
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="d-flex align-items-center gap-2">
+              <label for="perPage">Hiển thị</label>
+              <select class="form-select form-select-sm w-auto" id="perPage">
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+              <label for="perPage">đơn vị</label>
+            </div>
           </div>
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-          <div>
-            <label for="status" class="form-label">Trạng thái</label>
-            <select class="form-select" id="status" name="status">
-              <option value="" selected>Mặc định</option>
-              <option value="0">Tạm khóa</option>
-              <option value="1">Đang Hoạt động</option>
-            </select>
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <nav aria-label="Page user management navigation">
+              <ul class="pagination justify-content-end" id="paginate"></ul>
+            </nav>
           </div>
-        </div>
-      </div>
 
-      <div class="row my-3 actions">
-        <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 col left">
-          <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropAddNew">
-            <i class="fa-solid fa-user-plus"></i>
-            <span>Thêm mới</span>
-          </button>
-        </div>
-
-        <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 col right text-end">
-          <button type="submit" class="btn btn-primary ms-3">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <span>Tìm kiếm</span>
-          </button>
-
-          <button type="reset" id="clear-search" class="btn btn-success ms-3">
-            <i class="fa-solid fa-delete-left"></i>
-            <span>Xóa tìm</span>
-          </button>
-        </div>
-      </div>
-    </form>
-
-
-    <div>
-      <p class="text-end">
-        Hiển thị từ <span id="from">1</span> ~ <span id="to">10</span> trong tổng số
-        <span id="total">100</span> user
-      </p>
-
-      <!-- main datatable -->
-      <div class="table-responsive">
-        <table class="table table-striped" id="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Họ tên</th>
-              <th scope="col">Email</th>
-              <th scope="col">Nhóm</th>
-              <th scope="col">Trạng Thái</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody id="table-body"></tbody>
-        </table>
-      </div>
-
-
-      <div class="row">
-
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <div class="d-flex align-items-center gap-2">
-            <label for="perPage">Hiển thị</label>
-            <select class="form-select form-select-sm w-auto" id="perPage">
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
-            <label for="perPage">đơn vị</label>
-          </div>
-        </div>
-
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <nav aria-label="Page user management navigation">
-            <ul class="pagination justify-content-end" id="paginate"></ul>
-          </nav>
         </div>
 
       </div>
 
     </div>
 
-  </div>
-
-  <script>
-    let perPage = 10;
+    <script>
+      let perPage = 10;
       let page = 1;
       let name = '';
       let email = '';
@@ -294,10 +358,12 @@ User Manager Page
                   <td>${user?.email}</td>
                   <td>${user?.role ?? 'unknow'}</td>
                   <td>${user?.active_text}</td>
-                  <td>
-                    <i class="fa-solid fa-pen"></i>
-                    <i class="fa-solid fa-trash-can"></i>
-                    <i class="fa-solid fa-user-xmark"></i>
+                  <td class="d-flex flex-row flex-wrap gap-3">
+                    <button class="btn btn-warning btnEditUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropUpdate">
+                      <i class="fa-solid fa-pen text-white btnEditUser" data-userId=${user?.id}></i>
+                    </button>
+                    <button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+                    <button class="btn btn-info"><i class="fa-solid fa-user-xmark text-white"></i></button>
                   </td>
                 </tr>
                 `);
@@ -359,12 +425,12 @@ User Manager Page
 
 
       //* ++++++++++++++++++++ HANDLE ADD NEW USER ++++++++++++++++++++ *//
-      const handleComparePassword = (password, confirmPassword) => {
+      const handleComparePassword = (password, confirmPassword, target = '#password-error-text') => {
         if (password === confirmPassword) {
-          $('#password-error-text').html(null)
+          $(target).html(null)
           return false;
         } else {
-          $('#password-error-text').html('Mật khẩu không trùng khớp')
+          $(target).html('Mật khẩu không trùng khớp')
           return true;
         }
       }
@@ -423,7 +489,106 @@ User Manager Page
           }
         });
       });
-  </script>
 
-</main>
+      //* ++++++++++++++++++++ HANDLE UPDATE USER ++++++++++++++++++++ *//
+
+      // Get user data want to update.
+      $('#table-body').on('click', event => {
+        // If not the button show modal to edit. Break function.
+        const isBtnEditUser = event.target.classList.value.includes('btnEditUser');
+        if (!isBtnEditUser) return;
+
+        // set userId for hidden input
+        const userId = event.target.dataset.userid;
+        $('#userId').val(userId);
+
+        const url = `{{ route('user.edit', ['user' => ':userId']) }}`.replace(':userId', userId);
+
+        $.ajax({
+          type: 'GET',
+          url: url,
+          dataType: 'json',
+          success: function(response) {
+            const user = response.user ?? {};
+
+            $('#nameEditing').val(user?.name);
+            $('#emailEditing').val(user?.email);
+            $('#roleEditing').val(user?.role);
+            $('#statusEditing').val(user?.is_active);
+          },
+          error: function(error) {
+            alert('Không thể xử lý dữ liệu');
+            console.error(error);
+          }
+        });
+
+      });
+
+      const staticBackdropUpdate = new bootstrap.Modal(document.getElementById('staticBackdropUpdate'), {
+        keyboard: false
+      });
+
+      let isErrorEditing = false;
+
+      $('#passwordEditing').on('keyup', ({
+        target
+      }) => {
+        isErrorEditing = handleComparePassword(
+          target.value,
+          $('#confirmPasswordEditing').val(),
+          '#password-editing-error-text'
+        )
+      });
+
+      $('#confirmPasswordEditing').on('keyup', ({
+        target
+      }) => {
+        isErrorEditing = handleComparePassword(
+          $('#passwordEditing').val(),
+          target.value,
+          '#password-editing-error-text'
+        )
+      })
+
+      $('#update-user-form').on('submit', (event) => {
+        event.preventDefault();
+        if (isErrorEditing) return;
+
+        const {
+          userId,
+          nameEditing,
+          emailEditing,
+          roleEditing,
+          statusEditing,
+          passwordEditing,
+          confirmPassworEditing
+        } = getData(event);
+
+        const url = `{{ route('user.update', ['user' => ':id']) }}`.replace(':id', userId);
+
+        $.ajax({
+          url: url,
+          type: 'PATCH',
+          data: {
+            name: nameEditing,
+            email: emailEditing,
+            role: roleEditing,
+            status: statusEditing,
+            password: passwordEditing,
+          },
+          success: function(response) {
+            renderDatatable();
+            event.target.reset();
+            staticBackdropUpdate?.hide();
+            alert('Cập nhập người dùng thành công');
+          },
+          error: function(error) {
+            alert('Không thể xử lý dữ liệu');
+            console.error(error);
+          }
+        });
+      });
+    </script>
+
+  </main>
 @endsection
