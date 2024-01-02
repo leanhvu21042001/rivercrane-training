@@ -44,6 +44,12 @@
     body {
       font-family: 'Nunito', sans-serif;
     }
+
+    .tooltip-inner {
+      background: none;
+      max-width: 200px;
+      max-height: 200px;
+    }
   </style>
 
 </head>
