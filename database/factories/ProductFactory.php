@@ -17,7 +17,7 @@ class ProductFactory extends Factory
     public function definition()
     {
         // Image test
-        static $image = "/uploads/product/image_test_400_x_400.png";
+        static $image = "/uploads-test/product/image_test_400_x_400.png";
 
         return [
             "name" => fake()->name(),

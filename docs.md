@@ -89,8 +89,7 @@ class DatabaseSeeder extends Seeder
 
 ```php
 
-<?php
-// Use UserSeeder Here
+<?php // Use UserSeeder Here
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -114,16 +113,13 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
     }
 }
-
 ```
 
 - [factory](https://laravel.com/docs/10.x/seeding#using-model-factories)
 
 ```php
 // Example
-<?php
-
-namespace Database\Factories;
+<?php namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -141,21 +137,27 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'password' => fake()->password(),
-            'remember_token' => Str::random(100),
-            'verify_email' => fake()->randomElement([null, fake()->unique()->safeEmail()]),
-            'is_active' => fake()->randomElement([0, 1]),
-            'is_delete' =>  fake()->randomElement([0, 1]),
-            'last_login_at' => fake()->dateTimeThisYear(),
-            'last_login_ip' => fake()->ipv4(),
-            'created_at' => fake()->dateTimeThisDecade(),
-            'updated_at' => fake()->dateTimeThisDecade(),
+            "name" => fake()->name(),
+            "email" => fake()
+                ->unique()
+                ->safeEmail(),
+            "password" => fake()->password(),
+            "remember_token" => Str::random(100),
+            "verify_email" => fake()->randomElement([
+                null,
+                fake()
+                    ->unique()
+                    ->safeEmail(),
+            ]),
+            "is_active" => fake()->randomElement([0, 1]),
+            "is_delete" => fake()->randomElement([0, 1]),
+            "last_login_at" => fake()->dateTimeThisYear(),
+            "last_login_ip" => fake()->ipv4(),
+            "created_at" => fake()->dateTimeThisDecade(),
+            "updated_at" => fake()->dateTimeThisDecade(),
         ];
     }
 }
-
 ```
 
 ## Câu lệnh rút gọn tạo controller, model, seeder, factory, migration, policy
@@ -188,3 +190,27 @@ Other Options
 php artisan make:model <ModelName> -help
 
 ```
+
+## Cách tạo một **Symlink** từ /storage -> /public
+
+- B1: Tạo folder trong `/storage/app/public`
+- B2: Vào file `filesystems.php` để cập nhập thông tin `links`
+
+```php
+'links' => [
+        // public_path('storage') => storage_path('app/public'),
+        public_path('uploads') => storage_path('app/uploads'),
+    ],
+```
+
+- B3: Chạy câu lệnh để tự động tạo `symlink`
+
+```sh
+php artisan storage:link
+```
+
+> Mặc định laravel sẽ lưu những file upload lên vào `/storage/app/public` và cần tạo một `symbolic link` để liên kết từ `/storage` đến `/public`.
+
+- Các xử lý khác nếu không muốn lưu vào /storage [Laravel Public Files with No Symlink: in Public Folder Instead of Storage](https://laraveldaily.com/post/laravel-public-files-with-no-symlink-in-public-folder-instead-of-storage)
+
+<!--  -->

@@ -276,11 +276,11 @@
                   <tr>
                     <th scope="row">${product?.id}</th>
                     <td class="product-name">
-                        <span class="all: unset;" data-toggle="tooltip" title="<img src='${product?.image}' alt='${product?.name}' width='200' />">
+                        <span class="all: unset;" data-toggle="tooltip" title="<img src='{{ url('') }}/${product?.image}' alt='${product?.name}' width='200' />">
                             ${product?.name}
                         </span>
                     </td>
-                    <td class="text-justify" style="max-width: 600px;">${product?.description}</td>
+                    <td class="text-justify" style="display: inline-block; height: 150px; min-height: fit-content; overflow: auto; width: 100%;">${product?.description}</td>
                     <td class="text-success">$${product?.price ?? 0}</td>
                     <td class="${!product?.is_sales? "text-danger":"text-success"}">${product?.status_sale_text}</td>
                     <td>

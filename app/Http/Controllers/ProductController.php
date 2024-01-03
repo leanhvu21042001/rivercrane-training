@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -95,7 +96,33 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        $fileUpload = $request->file('fileUpload');
+
+        // store file to storage if $fileUpload exists
+        if ($fileUpload) {
+            $fileNameHashed = $fileUpload->hashName();
+            $path = Storage::putFileAs('uploads/product', $fileUpload, $fileNameHashed);
+            $request->merge(['image' =>  $path]);
+        }
+
+        $name = $request->input('name');
+        $description = $request->input('description') ?? ''; // data should be an empty string instead of NULL
+        $price = $request->input('price');
+        $is_sales = $request->input('is_sales');
+        $image = $request->input('image');
+
+        $created = Product::create([
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'is_sales' => $is_sales,
+            'image' => $image,
+        ]);
+
+        return response()->json([
+            'message' => 'Created product',
+            'product' => $created
+        ], 201);
     }
 
     /**
