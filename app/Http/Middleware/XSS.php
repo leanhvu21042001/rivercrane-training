@@ -23,12 +23,22 @@ class XSS
 
         $input = $request->all();
 
-        array_walk_recursive($input, function (&$input) {
-            $input = strip_tags($input);
+        array_walk_recursive($input, function (&$input, $key) {
+            // TODO: should change the solution.
+            // Skip stripping tags for the "description" field
+            if (!$this->skipStrippingFields($key)) {
+                $input = strip_tags($input);
+            }
         });
 
         $request->merge($input);
 
         return $next($request);
+    }
+
+    private function skipStrippingFields($key = '')
+    {
+        // Add more field name to array
+        return in_array($key, ['description']);
     }
 }

@@ -34,5 +34,6 @@ Route::middleware(['XSS'])->prefix('admin')->group(function () {
         Route::patch('/user/{user}/delete', [UserController::class, 'delete'])->name('user.delete');
 
         Route::resource('product', ProductController::class);
+        Route::patch('/product/{product}/delete', [ProductController::class, 'delete'])->name('product.delete');
     });
 });

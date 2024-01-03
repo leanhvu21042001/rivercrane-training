@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,8 +15,66 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        if ($request->ajax()) {
+            $perPage = $request->get('perPage') ?? 10;
+            $name = $request->get('name') ?? '';
+            $status = $request->get('status') ?? '';
+            $price_from = $request->get('price_from') ?? '';
+            $price_to = $request->get('price_to') ?? '';
+
+            $products = Product::where('is_delete', 0)
+                ->orderByDesc('created_at');
+
+            // Handle Filter, Search
+            if (!empty($name)) {
+                $products->where('name', 'LIKE', "%$name%");
+            }
+            if (isset($status) && $status !== '') {
+                $products->where('is_sales', '=', $status);
+            }
+
+            if (isset($price_from) && $price_from !== '' && isset($price_to) && $price_to !== '') {
+                $min_price = 0;
+                $max_price = 0;
+
+                if ($price_from === $price_to) {
+                    $min_price = 0;
+                    $max_price = $price_to;
+                } elseif ($price_from > $price_to) {
+                    $min_price = $price_to;
+                    $max_price = $price_from;
+                } elseif ($price_from < $price_to) {
+                    $min_price = $price_from;
+                    $max_price = $price_to;
+                }
+
+                if ($min_price !== 0 && $max_price !== 0) {
+                    $products->whereBetween('price', [$min_price, $max_price]);
+                }
+            }
+
+            $paginate = $products->paginate($perPage);
+
+            $paginate->getCollection()->transform(function ($product) {
+
+                // 0: Ngừng bán, 1: Đang bán, 2: Hết hàng
+                $product->status_sale_text = [
+                    "Ngừng bán",
+                    "Đang bán",
+                    "Hết hàng",
+                ][$product->is_sales];
+
+                return $product;
+            });
+
+            return response()->json([
+                'paginate' => $paginate
+            ]);
+        }
+
         return view('admin.pages.products.index');
     }
 
@@ -25,7 +85,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.pages.products.create');
     }
 
     /**
@@ -36,7 +96,33 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        $fileUpload = $request->file('fileUpload');
+
+        // store file to storage if $fileUpload exists
+        if ($fileUpload) {
+            $fileNameHashed = $fileUpload->hashName();
+            $path = Storage::putFileAs('uploads/product', $fileUpload, $fileNameHashed);
+            $request->merge(['image' =>  $path]);
+        }
+
+        $name = $request->input('name');
+        $description = $request->input('description') ?? ''; // data should be an empty string instead of NULL
+        $price = $request->input('price');
+        $is_sales = $request->input('is_sales');
+        $image = $request->input('image');
+
+        $created = Product::create([
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'is_sales' => $is_sales,
+            'image' => $image,
+        ]);
+
+        return response()->json([
+            'message' => 'Created product',
+            'product' => $created
+        ], 201);
     }
 
     /**
@@ -58,7 +144,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('admin.pages.products.edit', compact('product'));
     }
 
     /**
@@ -68,9 +154,58 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, Product $product)
     {
-        //
+        $fileUpload = $request->file('fileUpload');
+
+        // store file to storage if $fileUpload exists
+        if ($fileUpload) {
+            $fileNameHashed = $fileUpload->hashName();
+            $path = Storage::putFileAs('uploads/product', $fileUpload, $fileNameHashed);
+            $request->merge(['image' =>  $path]);
+        }
+
+        $name = $request->input('name') ?? $product->name;
+        // description: data should be an empty string instead of NULL
+        $description = $request->input('description') ?? $product->description;
+        $price = $request->input('price') ?? $product->price;
+        $is_sales = $request->input('is_sales') ?? $product->is_sales;
+        $image = $request->input('image') ?? $product->image;
+
+        if (!$request->input('imageName')) {
+            $image = '';
+        }
+
+        $updated = Product::where('id', '=', $product->id)->update([
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'is_sales' => $is_sales,
+            'image' => $image,
+        ]);
+
+        return response()->json([
+            'message' => 'Updated product',
+            'product' => $updated
+        ], 200);
+    }
+
+    /**
+     * Set is_delete = true from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $deleted = Product::where('id', '=', $id)->update([
+            'is_delete' => 1
+        ]);
+
+        return response()->json([
+            'message' => "Deleted product",
+            'product' => $deleted,
+        ]);
     }
 
     /**

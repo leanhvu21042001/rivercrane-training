@@ -13,8 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
+        Schema::create('mst_products', function (Blueprint $table) {
+            $table->string('id', 10)->primary();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->integer('price');
+            $table->tinyInteger('is_sales')->comment('0: Ngừng bán, 1: Đang bán, 2: Hết hàng');
+            $table->string('image')->nullable();
+            $table->tinyInteger('is_delete')->default(0)->comment('0: Bình thường , 1 : Đã xóa');
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('mst_products');
     }
 };
