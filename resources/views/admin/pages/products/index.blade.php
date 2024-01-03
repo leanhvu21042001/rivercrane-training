@@ -272,22 +272,30 @@
               // Render table data
               $('#table-body').html(null);
               $.each(items, (index, product) => {
+                const linkEditProduct =
+                  `{{ route('product.edit', ['product' => ':product']) }}`.replace(
+                    ':product',
+                    product?.id
+                  );
+
                 $('#table-body').append(`
                   <tr>
                     <th scope="row">${product?.id}</th>
                     <td class="product-name">
-                        <span class="all: unset;" data-toggle="tooltip" title="<img src='{{ url('') }}/${product?.image}' alt='${product?.name}' width='200' />">
-                            ${product?.name}
-                        </span>
+                        ${
+                        product?.image ?
+                        `<span data-toggle="tooltip" title="<img src='{{ url('') }}/${product?.image}' alt='${product?.name}' width='200' />">${product?.name}</span>`
+                        : product?.name
+                        }
                     </td>
                     <td class="text-justify" style="display: inline-block; height: 150px; min-height: fit-content; overflow: auto; width: 100%;">${product?.description}</td>
                     <td class="text-success">$${product?.price ?? 0}</td>
                     <td class="${!product?.is_sales? "text-danger":"text-success"}">${product?.status_sale_text}</td>
                     <td>
                       <div class="d-flex flex-row flex-wrap gap-3">
-                        <button class="btn btn-warning" data-productId=${product?.id}>
+                        <a href="${linkEditProduct}" class="btn btn-warning" data-productId=${product?.id}>
                             <i class="fa-solid fa-pen text-white" data-productId=${product?.id}></i>
-                        </button>
+                        </a>
                         <button class="btn btn-danger btnDeleteProduct" data-productId=${product?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteProduct">
                           <i class="fa-solid fa-trash-can btnDeleteProduct" data-productId=${product?.id}></i>
                         </button>

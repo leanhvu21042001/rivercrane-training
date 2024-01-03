@@ -28,7 +28,6 @@ class StoreProductRequest extends FormRequest
             'price' => ['required', 'numeric', 'min:0'],
             'is_sales' => ['required', 'numeric'],
             'fileUpload' => [
-                'required',
                 'image',
                 'file_extension:png,jpg,jpeg',
                 'mimes:png,jpg,jpeg',

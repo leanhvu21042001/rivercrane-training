@@ -144,7 +144,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('admin.pages.products.edit', compact('product'));
     }
 
     /**
@@ -154,9 +154,40 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, Product $product)
     {
-        //
+        $fileUpload = $request->file('fileUpload');
+
+        // store file to storage if $fileUpload exists
+        if ($fileUpload) {
+            $fileNameHashed = $fileUpload->hashName();
+            $path = Storage::putFileAs('uploads/product', $fileUpload, $fileNameHashed);
+            $request->merge(['image' =>  $path]);
+        }
+
+        $name = $request->input('name') ?? $product->name;
+        // description: data should be an empty string instead of NULL
+        $description = $request->input('description') ?? $product->description;
+        $price = $request->input('price') ?? $product->price;
+        $is_sales = $request->input('is_sales') ?? $product->is_sales;
+        $image = $request->input('image') ?? $product->image;
+
+        if (!$request->input('imageName')) {
+            $image = '';
+        }
+
+        $updated = Product::where('id', '=', $product->id)->update([
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'is_sales' => $is_sales,
+            'image' => $image,
+        ]);
+
+        return response()->json([
+            'message' => 'Updated product',
+            'product' => $updated
+        ], 200);
     }
 
     /**
