@@ -12,17 +12,20 @@
         <a class="nav-link" href="{{ route('user.index') }}">Users</a>
         <a class="nav-link" href="{{ route('product.index') }}">Sản phẩm</a>
       </div>
+
+      <form class="ms-auto" action="{{ route('logout') }}" method="post">
+        <span class="text-white me-3">{{ Auth::user()->name }}</span>
+        {{ csrf_field() }} {{ method_field('POST') }}
+        <button class="btn btn-danger">
+          Logout
+        </button>
+
+      </form>
+
     </div>
 
 
-    <form action="{{ route('logout') }}" method="post">
-      <span class="text-white me-3">{{ Auth::user()->name }}</span>
-      {{ csrf_field() }} {{ method_field('POST') }}
-      <button class="btn btn-danger">
-        Logout
-      </button>
 
-    </form>
 
   </div>
 </nav>
