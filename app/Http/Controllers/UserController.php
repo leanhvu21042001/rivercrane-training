@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -159,8 +167,12 @@ class UserController extends Controller
      */
     public function delete($id)
     {
+        // Truyền $id vào để kiểm tra.
+        $this->authorize('delete', [User::class, $id]);
+
         $deleted = User::where('id', '=', $id)->update([
-            'is_delete' => 1
+            'is_delete' => 1,
+            'remember_token' => '',
         ]);
 
         return response()->json([

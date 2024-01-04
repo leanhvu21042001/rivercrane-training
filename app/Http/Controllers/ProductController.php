@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Product::class, 'product');
+    }
+
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -198,6 +207,8 @@ class ProductController extends Controller
      */
     public function delete($id)
     {
+        $this->authorize('delete', Product::class);
+
         $deleted = Product::where('id', '=', $id)->update([
             'is_delete' => 1
         ]);
