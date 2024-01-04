@@ -8,7 +8,7 @@
 @section('content')
   <main class="d-flex flex-column">
 
-    <div class="container d-flex flex-row align-items-center justify-content-between py-5">
+    <div class="container d-flex flex-row flex-wrap align-items-center justify-content-between py-5">
       <h1>Danh sách sản phẩm</h1>
 
       <!-- Breadcrumb -->
@@ -47,14 +47,15 @@
     <!-- Filter -->
     <div class="container filter">
       <form id="search-form" class="pb-4">
-        <div class="row my-3 fields">
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+        <div class="row justify-content-center my-3 fields">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-3">
             <div>
               <label for="name" class="form-label">Tên sản phẩm</label>
               <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên sản phẩm">
             </div>
           </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-3">
             <div>
               <label for="status" class="form-label">Trạng thái</label>
               <select class="form-select" id="status" name="status">
@@ -66,53 +67,51 @@
             </div>
           </div>
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-3">
             <div class="row">
-              <div class="col-5">
+              <div class="col-12 col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
                 <label for="price_from" class="form-label">Giá bán từ</label>
                 <input type="number" class="form-control" id="price_from" name="price_from" value="0"
                   min="0">
               </div>
-              <div class="col-2 px-0">
+              <div class="col-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 px-0">
                 <label class="form-label">&ThinSpace;</label>
                 <input type="text" class="form-control text-center px-0 border-0" value="~">
               </div>
-              <div class="col-5">
+              <div class="col-12 col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
                 <label for="price_to" class="form-label">Giá bán đến</label>
                 <input type="number" class="form-control" id="price_to" name="price_to" value="0" min="0">
               </div>
             </div>
           </div>
-
         </div>
 
         <!-- Actions -->
-        <div class="row my-3 actions">
-          <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 col left">
-            <a class="btn btn-primary" type="button" href="{{ route('product.create') }}">
-              <i class="fa-solid fa-plus"></i>
-              <span>Thêm mới</span>
-            </a>
-          </div>
+        <div class="d-flex flex-row flex-wrap justify-content-center gap-3 my-3 actions">
 
-          <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 col right text-end">
-            <button type="submit" class="btn btn-primary ms-3">
+          <div class="d-flex flex-row flex-wrap justify-content-center gap-3">
+            <button type="submit" class="btn btn-primary">
               <i class="fa-solid fa-magnifying-glass"></i>
               <span>Tìm kiếm</span>
             </button>
 
-            <button type="reset" id="clear-search" class="btn btn-success ms-3">
+            <button type="reset" id="clear-search" class="btn btn-success">
               <i class="fa-solid fa-delete-left"></i>
               <span>Xóa tìm</span>
             </button>
           </div>
+
+          <a class="btn btn-warning mw-100" type="button" href="{{ route('product.create') }}">
+            <i class="fa-solid fa-plus"></i>
+            <span>Thêm mới</span>
+          </a>
         </div>
 
       </form>
     </div>
 
     <div class="container">
-      <p class="text-end">
+      <p class="text-center">
         Hiển thị từ <span id="from">1</span> ~ <span id="to">10</span> trong tổng số
         <span id="total">100</span> sản phẩm
       </p>
@@ -124,9 +123,9 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Tên sản phẩm</th>
-              <th scope="col text-truncate" style="max-width: 150px;">Mô tả</th>
+              <th scope="col" class="d-xxl-block d-xl-block d-lg-block d-md-none d-sm-none d-none">Mô tả</th>
               <th scope="col">Giá</th>
-              <th scope="col">Trạng Thái</th>
+              <th style="min-width: 100px" scope="col">Trạng Thái</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -135,10 +134,26 @@
       </div>
 
       <!-- Pagination -->
-      <div class="row">
+      <div class="row my-3">
 
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-          <div class="d-flex align-items-center gap-2">
+        <div
+          class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4
+        order-xxl-1
+        order-xl-1
+        order-lg-1
+        order-md-2
+        order-sm-2
+        order-2
+        mb-3">
+          <div
+            class="d-flex align-items-center
+            justify-content-xxl-start
+            justify-content-xl-start
+            justify-content-lg-start
+            justify-content-md-center
+            justify-content-sm-center
+            justify-content-center
+            gap-2">
             <label for="perPage">Hiển thị</label>
             <select class="form-select form-select-sm w-auto" id="perPage">
               <option value="10">10</option>
@@ -149,9 +164,27 @@
           </div>
         </div>
 
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <div
+          class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8
+        order-xxl-2
+        order-xl-2
+        order-lg-2
+        order-md-1
+        order-sm-1
+        order-1
+        mb-3">
           <nav aria-label="Page product management navigation">
-            <ul class="pagination justify-content-end" id="paginate"></ul>
+            <ul
+              class="pagination
+            justify-content-xxl-end
+            justify-content-xl-end
+            justify-content-lg-end
+            justify-content-md-center
+            justify-content-sm-center
+            justify-content-center
+            flex-wrap
+            "
+              id="paginate"></ul>
           </nav>
         </div>
 
@@ -288,7 +321,7 @@
                         : product?.name
                         }
                     </td>
-                    <td class="text-justify" style="display: inline-block; height: 150px; min-height: fit-content; overflow: auto; width: 100%;">${product?.description}</td>
+                    <td class="d-xxl-inline-block d-xl-inline-block d-lg-inline-block d-md-none d-sm-none d-none" style="height: 150px; min-height: fit-content; overflow: auto; width: 100%;">${product?.description}</td>
                     <td class="text-success">$${product?.price ?? 0}</td>
                     <td class="${!product?.is_sales? "text-danger":"text-success"}">${product?.status_sale_text}</td>
                     <td>
