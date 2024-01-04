@@ -477,7 +477,7 @@
             `);
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });
@@ -546,7 +546,7 @@
               alert('Tạo người dùng mới thành công');
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });
@@ -581,7 +581,7 @@
               $('#confirmPasswordEditing').val(null);
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });
@@ -646,7 +646,7 @@
               alert('Cập nhập người dùng thành công');
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });
@@ -707,7 +707,7 @@
               alert('Cập nhập người dùng thành công');
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });
@@ -756,7 +756,7 @@
               alert('Xóa người dùng thành công');
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
             }
           });
         });

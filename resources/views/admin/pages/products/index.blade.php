@@ -351,7 +351,7 @@
               `);
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });
@@ -403,7 +403,7 @@
               alert('Xóa sản phẩm thành công');
             },
             error: function(error) {
-              alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+              alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
               console.error(error);
             }
           });

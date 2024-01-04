@@ -12,15 +12,15 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof AuthorizationException) {
-            // return response()->view('admin.pages.errors.403', [], 403);
+            return response()->view('admin.pages.errors.403', [], 403);
 
             // return response()->json([
             //     'message' => $exception->getMessage(),
             // ], 403);
 
-            return response()->json([
-                'message' => 'Không có quyền xử lý',
-            ], 403);
+            // return response()->json([
+            //     'message' => 'Không có quyền xử lý',
+            // ], 403);
         }
 
         // if ($exception instanceof ModelNotFoundException) {

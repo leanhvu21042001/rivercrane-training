@@ -258,7 +258,7 @@
             window.location.href = "{{ route('product.index') }}";
           },
           error: (error) => {
-            alert(error.responseJSON.message ?? 'Không thể xử lý dữ liệu');
+            alert(error?.responseJSON?.message ?? 'Không thể xử lý dữ liệu');
             console.error(error);
           }
         })
