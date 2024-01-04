@@ -7,13 +7,8 @@
 
 @section('content')
   <main class="vh-100 d-flex">
-    <div class="card w-25 m-auto ">
+    <div class="card m-auto">
       <div class="card-body">
-        <p class="text-danger text-center">
-          @error('errorBack')
-            {{ $message }}
-          @enderror
-        </p>
         <form method="POST" action="{{ route('doLogin') }}">
           {{ csrf_field() }} {{ method_field('POST') }}
 
@@ -39,7 +34,7 @@
             </p>
           </div>
 
-          <div class="d-flex flex-row justify-content-between">
+          <div class="d-flex flex-row flex-wrap justify-content-between">
             <div class="mb-3 form-check">
               <input name="remember" type="checkbox" {{ old('remember') ? 'checked' : '' }} class="form-check-input"
                 id="remember">
