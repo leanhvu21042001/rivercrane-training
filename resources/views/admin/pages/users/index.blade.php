@@ -184,14 +184,14 @@
       <!-- End Modal Delete user -->
 
       <form id="search-form" class="pb-4">
-        <div class="row my-3 fields">
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+        <div class="row justify-content-center my-3 fields">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-3">
             <div>
               <label for="name" class="form-label">Tên</label>
               <input type="text" class="form-control" id="name" name="name" placeholder="Nhập họ tên">
             </div>
           </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-3">
             <div>
               <label for="email" class="form-label">Email</label>
               <input class="form-control" id="email" name="email" placeholder="Nhập email">
@@ -200,7 +200,7 @@
             --}}
             </div>
           </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-3">
             <div>
               <label for="role" class="form-label">Nhóm</label>
               <select class="form-select" id="role" name="role">
@@ -211,7 +211,7 @@
               </select>
             </div>
           </div>
-          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 mb-3">
             <div>
               <label for="status" class="form-label">Trạng thái</label>
               <select class="form-select" id="status" name="status">
@@ -223,32 +223,30 @@
           </div>
         </div>
 
-        <div class="row my-3 actions">
-          <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 col left">
-            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-              data-bs-target="#staticBackdropAddNew">
-              <i class="fa-solid fa-user-plus"></i>
-              <span>Thêm mới</span>
-            </button>
-          </div>
-
-          <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 col right text-end">
-            <button type="submit" class="btn btn-primary ms-3">
+        <div class="d-flex flex-row flex-wrap justify-content-center gap-3 my-3 actions">
+          <div class="d-flex flex-row flex-wrap justify-content-center gap-3">
+            <button type="submit" class="btn btn-primary ">
               <i class="fa-solid fa-magnifying-glass"></i>
               <span>Tìm kiếm</span>
             </button>
 
-            <button type="reset" id="clear-search" class="btn btn-success ms-3">
+            <button type="reset" id="clear-search" class="btn btn-success ">
               <i class="fa-solid fa-delete-left"></i>
               <span>Xóa tìm</span>
             </button>
           </div>
+
+          <button class="btn btn-warning" type="button" data-bs-toggle="modal"
+            data-bs-target="#staticBackdropAddNew">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Thêm mới</span>
+          </button>
         </div>
       </form>
 
 
       <div>
-        <p class="text-end">
+        <p class="text-center">
           Hiển thị từ <span id="from">1</span> ~ <span id="to">10</span> trong tổng số
           <span id="total">100</span> user
         </p>
@@ -271,10 +269,26 @@
         </div>
 
 
-        <div class="row">
+        <div class="row my-3">
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <div class="d-flex align-items-center gap-2">
+          <div
+            class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4
+            order-xxl-1
+            order-xl-1
+            order-lg-1
+            order-md-2
+            order-sm-2
+            order-2
+            mb-3">
+            <div
+              class="d-flex align-items-center
+                justify-content-xxl-start
+                justify-content-xl-start
+                justify-content-lg-start
+                justify-content-md-center
+                justify-content-sm-center
+                justify-content-center
+                gap-2">
               <label for="perPage">Hiển thị</label>
               <select class="form-select form-select-sm w-auto" id="perPage">
                 <option value="10">10</option>
@@ -285,14 +299,31 @@
             </div>
           </div>
 
-          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <nav aria-label="Page user management navigation">
-              <ul class="pagination justify-content-end" id="paginate"></ul>
+          <div
+            class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8
+            order-xxl-2
+            order-xl-2
+            order-lg-2
+            order-md-1
+            order-sm-1
+            order-1
+            mb-3">
+            <nav aria-label="Page product management navigation">
+              <ul
+                class="pagination
+                justify-content-xxl-end
+                justify-content-xl-end
+                justify-content-lg-end
+                justify-content-md-center
+                justify-content-sm-center
+                justify-content-center
+                flex-wrap
+                "
+                id="paginate"></ul>
             </nav>
           </div>
 
         </div>
-
       </div>
 
     </div>
