@@ -10,20 +10,14 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
-     * Create the controller instance.
-     */
-    public function __construct()
-    {
-        $this->authorizeResource(User::class, 'user');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', [User::class]);
+
         if ($request->ajax()) {
             $perPage = $request->get('perPage') ?? 10;
             $name = $request->get('name') ?? '';
@@ -62,16 +56,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -79,6 +63,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        $this->authorize('create', [User::class]);
+
         $name = $request->input('name');
         $email = $request->input('email');
         $role = $request->input('role');
@@ -100,17 +86,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -118,6 +93,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('update', [User::class]);
+
         $user = User::where('id', '=', $id)->first();
 
         return response()->json([
@@ -134,6 +111,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
+        $this->authorize('update', [User::class]);
+
         $name = $request->input('name');
         $email = $request->input('email');
         $role = $request->input('role');
@@ -146,7 +125,7 @@ class UserController extends Controller
                 'email' => $email,
                 'group_role' => $role,
                 'is_active' => $status,
-                'password' => $password,
+                'password' => $password ? bcrypt($password) : '',
             ],
             'strlen'
         );
@@ -179,16 +158,5 @@ class UserController extends Controller
             'message' => "Deleted user",
             'user' => $deleted,
         ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
