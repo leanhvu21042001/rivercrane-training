@@ -111,6 +111,32 @@ composer -V
 
 ```
 
+## Xử lý lỗi không chạy được bất kỳ routes nào khác route mặc định
+
+- Phải cập nhập lại `/etc/httpd/conf/httpd.conf`
+
+```sh
+<VirtualHost *:80>
+        ServerName intern_it57.com
+        DocumentRoot /var/www/intern_it57/public
+       <Directory /var/www/intern_it57/public>
+            AllowOverride All
+        </Directory>
+</VirtualHost>
+```
+
+## Xử lý lỗi khi kết nối database
+
+> Lỗi thế này: **SQLSTATE[HY000] [2002] Permission denied**
+
+```sh
+# Check SELinux context
+ls -Z /var/www/intern_it57
+
+# Allow HTTPD to connect to the network (replace with the actual web server user)
+setsebool -P httpd_can_network_connect on
+```
+
 ## Tham khảo
 
 - [How To Install PHP 8 on CentOS 7 | RHEL 8 – 5 Simple Steps](https://www.websitevidya.com/how-to-install-php-8-on-centos-7-rhel-8/)
