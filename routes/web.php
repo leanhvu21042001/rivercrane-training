@@ -21,12 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function () {
-    return "Test";
-});
-
-
-Route::middleware(['XSS'])->group(function () {
+Route::middleware(['XSS'])->prefix('admin')->group(function () {
     Route::get('/login', [LoginController::class, 'showLogin'])->name('showLogin');
     Route::post('/login', [LoginController::class, 'doLogin'])->name('doLogin');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
