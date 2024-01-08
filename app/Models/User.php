@@ -9,6 +9,10 @@ class User extends Authenticatable
 {
     use HasFactory;
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_EDITOR = 'editor';
+    public const ROLE_REVIEWER = 'reviewer';
+
     /**
      * The table associated with the model.
      *

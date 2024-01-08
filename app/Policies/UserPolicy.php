@@ -17,7 +17,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($user->group_role, ['admin', 'editor']);
+        return in_array($user->group_role, [User::ROLE_ADMIN, User::ROLE_EDITOR]);
     }
 
 
@@ -29,7 +29,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return in_array($user->group_role, ['admin']);
+        return in_array($user->group_role, [User::ROLE_ADMIN]);
     }
 
     /**
@@ -40,7 +40,7 @@ class UserPolicy
      */
     public function update(User $user)
     {
-        return in_array($user->group_role, ['admin']);
+        return in_array($user->group_role, [User::ROLE_ADMIN]);
     }
 
     /**
@@ -52,6 +52,6 @@ class UserPolicy
      */
     public function delete(User $user, string $id)
     {
-        return in_array($user->group_role, ['admin']) && (int)$user->id !== (int)$id;
+        return in_array($user->group_role, [User::ROLE_ADMIN]) && (int)$user->id !== (int)$id;
     }
 }

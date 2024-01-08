@@ -18,7 +18,7 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($user->group_role, ['admin', 'editor', 'reviewer']);
+        return in_array($user->group_role, [User::ROLE_ADMIN, User::ROLE_EDITOR, User::ROLE_REVIEWER]);
     }
 
     /**
@@ -29,7 +29,7 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        return in_array($user->group_role, ['admin', 'editor']);
+        return in_array($user->group_role, [User::ROLE_ADMIN, User::ROLE_EDITOR]);
     }
 
     /**
@@ -41,7 +41,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        return in_array($user->group_role, ['admin', 'editor']);
+        return in_array($user->group_role, [User::ROLE_ADMIN, User::ROLE_EDITOR]);
     }
 
     /**
@@ -52,6 +52,6 @@ class ProductPolicy
      */
     public function delete(User $user)
     {
-        return in_array($user->group_role, ['admin', 'editor']);
+        return in_array($user->group_role, [User::ROLE_ADMIN, User::ROLE_EDITOR]);
     }
 }
