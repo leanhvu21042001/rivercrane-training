@@ -27,19 +27,13 @@ class LoginController extends Controller
         $password = $credentials['password'];
         $remember = $request->input('remember');
 
-        $userFound = User::where('email', '=', $email)->first();
-        if (!$userFound) {
-            return back()->withErrors([
-                'email' => 'Email không chính xác.',
-            ])->withInput($request->input());
-        }
-
         if (
             Auth::attempt(['email' => $email, 'password' => $password, 'is_active' => 1], $remember)
         ) {
-            $userFound->last_login_at = Carbon::now();
-            $userFound->last_login_ip = $request->ip();
-            $userFound->save();
+            User::where('email', '=', $email)->first()->update([
+                'last_login_at' => Carbon::now(),
+                'last_login_ip' => $request->ip(),
+            ]);
 
             $request->session()->regenerate();
             return redirect()->route('product.index');
