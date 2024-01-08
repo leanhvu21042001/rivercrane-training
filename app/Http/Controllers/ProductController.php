@@ -29,55 +29,19 @@ class ProductController extends Controller
 
         if ($request->ajax()) {
             $perPage = $request->get('perPage') ?? 10;
-            $name = $request->get('name') ?? '';
-            $status = $request->get('status') ?? '';
-            $price_from = $request->get('price_from') ?? '';
-            $price_to = $request->get('price_to') ?? '';
+            $name = $request->get('name');
+            $status = $request->get('status');
+            $minPrice = $request->get('price_from');
+            $maxPrice = $request->get('price_to');
 
-            $products = Product::where('is_delete', 0)
-                ->orderByDesc('created_at');
-
-            // Handle Filter, Search
-            if (!empty($name)) {
-                $products->where('name', 'LIKE', "%$name%");
-            }
-            if (isset($status) && $status !== '') {
-                $products->where('is_sales', '=', $status);
-            }
-
-            if (isset($price_from) && $price_from !== '' && isset($price_to) && $price_to !== '') {
-                $min_price = 0;
-                $max_price = 0;
-
-                if ($price_from === $price_to) {
-                    $min_price = 0;
-                    $max_price = $price_to;
-                } elseif ($price_from > $price_to) {
-                    $min_price = $price_to;
-                    $max_price = $price_from;
-                } elseif ($price_from < $price_to) {
-                    $min_price = $price_from;
-                    $max_price = $price_to;
-                }
-
-                if ($min_price !== 0 && $max_price !== 0) {
-                    $products->whereBetween('price', [$min_price, $max_price]);
-                }
-            }
+            $products = Product::notDelete()
+                ->orderByDesc('created_at')
+                ->byName($name)
+                ->byStatus($status)
+                ->byMinPrice($minPrice)
+                ->byMaxPrice($maxPrice);
 
             $paginate = $products->paginate($perPage);
-
-            $paginate->getCollection()->transform(function ($product) {
-
-                // 0: Ngừng bán, 1: Đang bán, 2: Hết hàng
-                $product->status_sale_text = [
-                    "Ngừng bán",
-                    "Đang bán",
-                    "Hết hàng",
-                ][$product->is_sales];
-
-                return $product;
-            });
 
             return response()->json([
                 'paginate' => $paginate

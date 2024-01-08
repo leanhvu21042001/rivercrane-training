@@ -20,33 +20,19 @@ class UserController extends Controller
 
         if ($request->ajax()) {
             $perPage = $request->get('perPage') ?? 10;
-            $name = $request->get('name') ?? '';
-            $email = $request->get('email') ?? '';
-            $role = $request->get('role') ?? '';
-            $status = $request->get('status') ?? '';
+            $name = $request->get('name');
+            $email = $request->get('email');
+            $role = $request->get('role');
+            $status = $request->get('status');
 
-            $users = User::where('is_delete', 0)
+            $users = User::notDelete()
+                ->byName($name)
+                ->byEmail($email)
+                ->byRole($role)
+                ->active($status)
                 ->orderByDesc('created_at');
 
-            // Handle Filter, Search
-            if (!empty($name)) {
-                $users->where('name', 'LIKE', "%$name%");
-            }
-            if (!empty($email)) {
-                $users->where('email', 'LIKE', "%$email%");
-            }
-            if (!empty($role)) {
-                $users->where('group_role', '=', $role);
-            }
-            if (isset($status) && $status !== '') {
-                $users->where('is_active', '=', $status);
-            }
-
             $paginate = $users->paginate($perPage);
-            $paginate->getCollection()->transform(function ($user) {
-                $user->active_text = $user->is_active ? 'Đang hoạt động' : 'Tạm khóa';
-                return $user;
-            });
 
             return response()->json([
                 'paginate' => $paginate
