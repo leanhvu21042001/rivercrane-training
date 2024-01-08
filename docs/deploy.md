@@ -137,6 +137,15 @@ ls -Z /var/www/intern_it57
 setsebool -P httpd_can_network_connect on
 ```
 
+## Xử lý lỗi không có quyền mở file và ghi file laravel.log
+
+```sh
+# Cấp quyền
+sudo chmod -R 777 /var/www/intern_it57/storage
+# Chạy lại apache
+sudo systemctl restart httpd
+```
+
 ## Tham khảo
 
 - [How To Install PHP 8 on CentOS 7 | RHEL 8 – 5 Simple Steps](https://www.websitevidya.com/how-to-install-php-8-on-centos-7-rhel-8/)
@@ -146,3 +155,4 @@ setsebool -P httpd_can_network_connect on
 - [How to Fix MySQL Error: Access Denied for User ‘root’@’localhost’](https://www.databasestar.com/access-denied-for-user-root-at-localhost/)
 - [Hướng dẫn cài đặt PHP 8.1 trên CentOS7](https://huongdan.azdigi.com/huong-dan-cai-dat-php-8-1-tren-centos7/)
 - [How To Install Laravel On CentOS 7](https://operavps.com/docs/install-laravel-on-centos/)
+- [Chmod 777: Nó thực sự nghĩa là gì?](https://viblo.asia/p/chmod-777-no-thuc-su-nghia-la-gi-E375zw4JKGW?fbclid=IwAR3nJAlb6nhILWm4cGZgoDjn1PiW3dOTbzQA9CoyF2VtfVJRgDU6sOXjmIY)
