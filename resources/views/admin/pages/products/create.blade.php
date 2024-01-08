@@ -46,7 +46,7 @@
 
             <div class="mb-3">
               <label for="productPrice" class="form-label">Giá bán</label>
-              <input name="price" type="text" class="form-control" id="productPrice" placeholder="Nhập tên sản phảm">
+              <input name="price" type="text" class="form-control" id="productPrice" placeholder="Nhập tên giá bán">
               <div class="text-danger" id="productPriceError"></div>
             </div>
 
@@ -180,6 +180,19 @@
         const name = event.target.value;
         const productNameError = checkProductName(name)
         $('#productNameError').html(productNameError);
+      });
+
+      $('#productPrice').on('keypress', (event) => {
+        // Get the key code of the pressed key
+        const keyCode = event.which ? event.which : event.keyCode;
+
+        // Allow digits and a dot (for decimal values)
+        const isAllowedKey = (keyCode >= 48 && keyCode <= 57);
+
+        // If the pressed key is not allowed, prevent the default action
+        if (!isAllowedKey) {
+          event.preventDefault();
+        }
       });
 
       $('#productPrice').on('input', (event) => {

@@ -46,7 +46,7 @@
             <div class="mb-3">
               <label for="productPrice" class="form-label">Giá bán</label>
               <input value="{{ $product->price }}" name="price" type="text" class="form-control" id="productPrice"
-                placeholder="Nhập tên sản phảm">
+                placeholder="Nhập tên giá bán">
               <div class="text-danger" id="productPriceError"></div>
             </div>
 
@@ -150,6 +150,7 @@
       const checkProductPrice = (price = '') => {
         if (price?.length === 0) return "Giá bán không được để trống";
         else if (Number(price).toString() === 'NaN') return "Giá bán chỉ được nhập số";
+        else if (Number.isInteger(Number(price))) return "Giá bán phải là số nguyên";
         else if (Number(price) < 0) return "Giá bán không được nhỏ hơn 0";
         return "";
       }
@@ -189,6 +190,18 @@
         $('#productNameError').html(productNameError);
       });
 
+      $('#productPrice').on('keypress', (event) => {
+        // Get the key code of the pressed key
+        const keyCode = event.which ? event.which : event.keyCode;
+
+        // Allow digits and a dot (for decimal values)
+        const isAllowedKey = (keyCode >= 48 && keyCode <= 57);
+
+        // If the pressed key is not allowed, prevent the default action
+        if (!isAllowedKey) {
+          event.preventDefault();
+        }
+      });
       $('#productPrice').on('input', (event) => {
         const price = event.target.value;
         const productPriceError = checkProductPrice(price)
