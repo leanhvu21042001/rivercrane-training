@@ -73,6 +73,7 @@
                 <label for="price_from" class="form-label">Giá bán từ</label>
                 <input type="number" class="form-control" id="price_from" name="price_from" value="0"
                   min="0">
+                <div class="text-danger" id="price_from_error"></div>
               </div>
               <div class="col-12 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 px-0">
                 <label class="form-label">&ThinSpace;</label>
@@ -81,7 +82,9 @@
               <div class="col-12 col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
                 <label for="price_to" class="form-label">Giá bán đến</label>
                 <input type="number" class="form-control" id="price_to" name="price_to" value="0" min="0">
+                <div class="text-danger" id="price_to_error"></div>
               </div>
+
             </div>
           </div>
         </div>
@@ -251,6 +254,8 @@
           // reset pagination
           page = 1;
 
+          if (Number(price_from) >= Number(price_to)) return;
+
           renderDatatable(page, perPage, name, status, price_from, price_to);
         });
 
@@ -267,6 +272,54 @@
 
           page = pageConverted;
           renderDatatable(page, perPage, name, status, price_from, price_to);
+        });
+
+        // Handle price inputs
+        const preventPriceInput = (inputId = '') => {
+          $(inputId).on('keypress', (event) => {
+            // Get the key code of the pressed key
+            const keyCode = event.which ? event.which : event.keyCode;
+
+            // Allow digits and a dot (for decimal values)
+            const isAllowedKey = (keyCode >= 48 && keyCode <= 57);
+
+            // If the pressed key is not allowed, prevent the default action
+            if (!isAllowedKey) {
+              event.preventDefault();
+            }
+          });
+        }
+
+        preventPriceInput('#price_from');
+        preventPriceInput('#price_to');
+
+        $('#price_from').on('input', event => {
+          if (!event.target.value) return;
+
+          price_from = event.target.value;
+
+
+          if (Number(price_from) >= Number(price_to)) {
+            $('#price_from_error').html(`Vui lòng nhập nhỏ hơn ${price_to || 0}`);
+            $('#price_to_error').html(`Vui lòng nhập lớn hơn ${price_from || 0}`);
+          } else {
+            $('#price_from_error').html(null);
+            $('#price_to_error').html(null);
+          }
+        });
+
+        $('#price_to').on('input', event => {
+          if (!event.target.value) return;
+
+          price_to = event.target.value;
+
+          if (Number(price_from) >= Number(price_to)) {
+            $('#price_from_error').html(`Vui lòng nhập nhỏ hơn ${price_to || 0}`);
+            $('#price_to_error').html(`Vui lòng nhập lớn hơn ${price_from || 0}`);
+          } else {
+            $('#price_from_error').html(null);
+            $('#price_to_error').html(null);
+          }
         });
 
         const renderDatatable = (
