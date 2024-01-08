@@ -145,3 +145,4 @@ setsebool -P httpd_can_network_connect on
 - [How To Install the Apache Web Server on CentOS 7](https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-7)
 - [How to Fix MySQL Error: Access Denied for User ‘root’@’localhost’](https://www.databasestar.com/access-denied-for-user-root-at-localhost/)
 - [Hướng dẫn cài đặt PHP 8.1 trên CentOS7](https://huongdan.azdigi.com/huong-dan-cai-dat-php-8-1-tren-centos7/)
+- [How To Install Laravel On CentOS 7](https://operavps.com/docs/install-laravel-on-centos/)
