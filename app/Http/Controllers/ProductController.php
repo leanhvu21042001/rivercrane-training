@@ -40,10 +40,15 @@ class ProductController extends Controller
                 ->byMinPrice($minPrice)
                 ->byMaxPrice($maxPrice);
 
+            $productMaxPrice = Product::notDelete()->orderBy('price', 'DESC')->first();
+            $productMinPrice = Product::notDelete()->orderBy('price', 'ASC')->first();
+
             $paginate = $products->paginate($perPage);
 
             return response()->json([
-                'paginate' => $paginate
+                'paginate' => $paginate,
+                'minPrice' => $productMinPrice->price,
+                'maxPrice' => $productMaxPrice->price,
             ]);
         }
 

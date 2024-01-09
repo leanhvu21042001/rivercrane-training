@@ -254,8 +254,6 @@
           // reset pagination
           page = 1;
 
-          if (Number(price_from) >= Number(price_to)) return;
-
           renderDatatable(page, perPage, name, status, price_from, price_to);
         });
 
@@ -295,6 +293,7 @@
 
         $('#price_from').on('input', event => {
           if (!event.target.value) return;
+          if (!price_to) return;
 
           price_from = event.target.value;
 
@@ -336,6 +335,9 @@
             dataType: 'json',
             success: function(response) {
               const paginate = response?.paginate ?? {};
+              const minPrice = response?.minPrice ?? 0;
+              const maxPrice = response?.maxPrice ?? 0;
+
               const total = paginate.total ?? 0;
               const from = paginate.from ?? 0;
               const to = paginate.to ?? 0;
@@ -346,6 +348,15 @@
               $('#from').html(from);
               $('#to').html(to);
               $('#total').html(total);
+
+              $('#price_from').val(minPrice);
+              $('#price_from').attr('min', minPrice);
+              $('#price_from').attr('max', maxPrice);
+
+              $('#price_to').val(maxPrice);
+              $('#price_to').attr('min', minPrice);
+              $('#price_to').attr('max', maxPrice);
+
 
               if (!paginate?.data?.length) {
                 // No data to show
