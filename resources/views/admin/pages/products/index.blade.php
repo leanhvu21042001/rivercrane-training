@@ -387,7 +387,7 @@
                         : product?.name
                         }
                     </td>
-                    <td class="d-xxl-inline-block d-xl-inline-block d-lg-inline-block d-md-none d-sm-none d-none" style="height: 150px; min-height: fit-content; overflow: auto; width: 100%;">${product?.description}</td>
+                    <td class="d-xxl-inline-block d-xl-inline-block d-lg-inline-block d-md-none d-sm-none d-none" style="height: 130px; min-height: fit-content; overflow: hidden; width: 100%;">${product?.description}</td>
                     <td class="text-success">$${product?.price ?? 0}</td>
                     <td class="${!product?.is_sales? "text-danger":"text-success"}">${product?.status_sale_text}</td>
                     <td>
