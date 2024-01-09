@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -133,7 +134,13 @@ class UserController extends Controller
     public function delete($id)
     {
         // Truyền $id vào để kiểm tra.
-        $this->authorize('delete', [User::class, $id]);
+        $this->authorize('delete', [User::class]);
+
+        if ((int)$id === (int)Auth::user()->id) {
+            return response()->json([
+                'message' => "Can not delete",
+            ], 403);
+        }
 
         $deleted = User::where('id', '=', $id)->update([
             'is_delete' => 1,

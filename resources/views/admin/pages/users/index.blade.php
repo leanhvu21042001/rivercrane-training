@@ -236,11 +236,13 @@
             </button>
           </div>
 
-          <button class="btn btn-warning" type="button" data-bs-toggle="modal"
-            data-bs-target="#staticBackdropAddNew">
-            <i class="fa-solid fa-user-plus"></i>
-            <span>Thêm mới</span>
-          </button>
+          @can('create', App\Models\User::class)
+            <button class="btn btn-warning" type="button" data-bs-toggle="modal"
+              data-bs-target="#staticBackdropAddNew">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Thêm mới</span>
+            </button>
+          @endcan
         </div>
       </form>
 
@@ -436,6 +438,18 @@
               // Render table data
               $('#table-body').html(null);
               $.each(items, (index, user) => {
+
+                // Return null if user 
+                const userId = user?.id;
+                const canDelete = Number(userId) !== Number({{ Auth::user()->id }}) ?
+                `
+                @can('delete', [App\Models\User::class])
+                <button class="btn btn-danger btnDeleteUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteUser">
+                    <i class="fa-solid fa-trash-can btnDeleteUser" data-userId=${user?.id}></i>
+                </button>
+                @endcan
+                ` : '';
+
                 $('#table-body').append(`
                 <tr>
                   <th scope="row">${user?.id}</th>
@@ -443,20 +457,24 @@
                   <td>${user?.email}</td>
                   <td class="text-capitalize">${user?.group_role ?? 'unknow'}</td>
                   <td class="${!user?.is_active ? "text-danger":"text-success"}">${user?.active_text}</td>
-                  <td class="d-flex flex-row flex-wrap gap-3">
-                    <button class="btn btn-warning btnEditUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropUpdate">
-                      <i class="fa-solid fa-pen text-white btnEditUser" data-userId=${user?.id}></i>
-                    </button>
+                  <td>
+                    <div class="d-flex flex-row flex-wrap gap-3">
+                        @can('update', App\Models\User::class)
+                        <button class="btn btn-warning btnEditUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropUpdate">
+                          <i class="fa-solid fa-pen text-white btnEditUser" data-userId=${user?.id}></i>
+                        </button>
+                        @endcan
 
-                    <button class="btn btn-danger btnDeleteUser" data-userId=${user?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteUser">
-                        <i class="fa-solid fa-trash-can btnDeleteUser" data-userId=${user?.id}></i>
-                    </button>
+                        ${canDelete}
 
-                    <button class="btn btn-dark btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active} data-bs-toggle="modal" data-bs-target="#staticBackdropBlockAndUnLock">
-                       ${user?.is_active ?
-                        `<i class="fa-solid fa-unlock text-white btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`
-                        :`<i class="fa-solid fa-lock text-warning btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`}
-                    </button>
+                        @can('update', App\Models\User::class)
+                        <button class="btn btn-dark btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active} data-bs-toggle="modal" data-bs-target="#staticBackdropBlockAndUnLock">
+                           ${user?.is_active ?
+                            `<i class="fa-solid fa-unlock text-white btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`
+                            :`<i class="fa-solid fa-lock text-warning btnToggleBlockUser" data-userId=${user?.id} data-isActive=${user?.is_active}></i>`}
+                        </button>
+                        @endcan
+                    </div>
                   </td>
                 </tr>
                 `);

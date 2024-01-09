@@ -9,7 +9,11 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="{{ route('user.index') }}">Users</a>
+
+        @can('viewAny', App\Models\User::class)
+          <a class="nav-link" href="{{ route('user.index') }}">Users</a>
+        @endcan
+
         <a class="nav-link" href="{{ route('product.index') }}">Sản phẩm</a>
       </div>
 

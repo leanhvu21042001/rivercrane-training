@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -36,10 +35,9 @@ class ProductPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Product $product)
+    public function update(User $user)
     {
         return in_array($user->group_role, [User::ROLE_ADMIN, User::ROLE_EDITOR]);
     }

@@ -104,10 +104,12 @@
             </button>
           </div>
 
-          <a class="btn btn-warning mw-100" type="button" href="{{ route('product.create') }}">
-            <i class="fa-solid fa-plus"></i>
-            <span>Thêm mới</span>
-          </a>
+          @can('create', App\Models\Product::class)
+            <a class="btn btn-warning mw-100" type="button" href="{{ route('product.create') }}">
+              <i class="fa-solid fa-plus"></i>
+              <span>Thêm mới</span>
+            </a>
+          @endcan
         </div>
 
       </form>
@@ -390,12 +392,17 @@
                     <td class="${!product?.is_sales? "text-danger":"text-success"}">${product?.status_sale_text}</td>
                     <td>
                       <div class="d-flex flex-row flex-wrap gap-3">
+                        @can('update', App\Models\Product::class)
                         <a href="${linkEditProduct}" class="btn btn-warning" data-productId=${product?.id}>
                             <i class="fa-solid fa-pen text-white" data-productId=${product?.id}></i>
                         </a>
+                        @endcan
+
+                        @can('delete', App\Models\Product::class)
                         <button class="btn btn-danger btnDeleteProduct" data-productId=${product?.id} data-bs-toggle="modal" data-bs-target="#staticBackdropDeleteProduct">
                           <i class="fa-solid fa-trash-can btnDeleteProduct" data-productId=${product?.id}></i>
                         </button>
+                        @endcan
                       </div>
                     </td>
                   </tr>

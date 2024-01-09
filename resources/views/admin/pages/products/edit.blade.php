@@ -150,7 +150,7 @@
       const checkProductPrice = (price = '') => {
         if (price?.length === 0) return "Giá bán không được để trống";
         else if (Number(price).toString() === 'NaN') return "Giá bán chỉ được nhập số";
-        else if (Number.isInteger(Number(price))) return "Giá bán phải là số nguyên";
+        else if (!Number.isInteger(Number(price))) return "Giá bán phải là số nguyên";
         else if (Number(price) < 0) return "Giá bán không được nhỏ hơn 0";
         return "";
       }

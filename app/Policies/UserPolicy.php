@@ -50,8 +50,8 @@ class UserPolicy
      * @param  string  $id
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, string $id)
+    public function delete(User $user)
     {
-        return in_array($user->group_role, [User::ROLE_ADMIN]) && (int)$user->id !== (int)$id;
+        return in_array($user->group_role, [User::ROLE_ADMIN]);
     }
 }
