@@ -54,10 +54,10 @@ sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.
 
 sudo yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
 
-# Step 2 – Enable remi-8.0 PHP Module
+# Step 2 – Enable remi-8.2 PHP Module
 sudo yum -y install yum-utils
 sudo yum-config-manager --disable 'remi-php*'
-sudo yum-config-manager --enable remi-php80
+sudo yum-config-manager --enable remi-php82
 
 # Step 3 – Install PHP 8 on Apache and Nginx
 ## Install PHP 8 on Apache
