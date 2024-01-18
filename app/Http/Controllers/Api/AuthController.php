@@ -46,7 +46,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => true,
-                'user_name' => $user->name,
+                'user' => $user,
                 'message' => 'Đăng nhập thành công',
             ], 200)->withCookie($cookie);
         } catch (\Throwable $th) {
