@@ -19,18 +19,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
-Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return $request->user();
-});
-
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::get('/me', fn (Request $request) => $request->user());
     Route::post('/auth/logout', [AuthController::class, 'logoutUser']);
 
-    Route::resource('user', UserController::class);
+    Route::apiResource('user', UserController::class);
     Route::patch('/user/{user}/delete', [UserController::class, 'delete'])->name('user.delete');
 
-    Route::resource('product', ProductController::class);
+    Route::apiResource('product', ProductController::class);
     Route::patch('/product/{product}/delete', [ProductController::class, 'delete'])->name('product.delete');
 });
 
