@@ -26,7 +26,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->get('perPage') ?? 10;
+        $perPage = $request->get('per_page') ?? 10;
         $name = $request->get('name');
         $status = $request->get('status');
         $minPrice = $request->get('price_from');
