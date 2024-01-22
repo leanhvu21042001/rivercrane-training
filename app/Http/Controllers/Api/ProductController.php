@@ -45,6 +45,7 @@ class ProductController extends Controller
         $paginate = $products->paginate($perPage);
 
         return response()->json([
+            'status' => true,
             'paginate' => $paginate,
             'minPrice' => $productMinPrice->price,
             'maxPrice' => $productMaxPrice->price,
@@ -83,11 +84,29 @@ class ProductController extends Controller
         ]);
 
         return response()->json([
+            'status' => true,
             'message' => 'Created product',
             'product' => $created
         ], 201);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getSingleData($id)
+    {
+        // $this->authorize('delete', Product::class);
+        $product = Product::where('id', '=', $id)->first();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Get product successfully',
+            'product' => $product
+        ], 201);
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -105,6 +124,8 @@ class ProductController extends Controller
             $path = Storage::putFileAs('uploads/product', $fileUpload, $fileNameHashed);
             $request->merge(['image' =>  $path]);
         }
+
+
 
         $name = $request->input('name') ?? $product->name;
         // description: data should be an empty string instead of NULL
@@ -126,6 +147,7 @@ class ProductController extends Controller
         ]);
 
         return response()->json([
+            'status' => true,
             'message' => 'Updated product',
             'product' => $updated
         ], 200);
@@ -146,6 +168,7 @@ class ProductController extends Controller
         ]);
 
         return response()->json([
+            'status' => true,
             'message' => "Deleted product",
             'product' => $deleted,
         ]);

@@ -54,7 +54,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $appends = ['status_sale_text'];
+    protected $appends = ['status_sale_text', 'image_url', 'image_name'];
 
 
     protected static function boot()
@@ -155,5 +155,21 @@ class Product extends Model
             "Đang bán",
             "Hết hàng",
         ][$this->is_sales];
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrlAttribute(): string
+    {
+        return $this->image ? url('/') . "/$this->image" : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageNameAttribute(): string
+    {
+        return Str::of($this->image)->explode('/')->last();
     }
 }

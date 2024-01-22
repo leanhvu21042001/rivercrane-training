@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/user/{user}/delete', [UserController::class, 'delete'])->name('user.delete');
 
     Route::apiResource('product', ProductController::class);
+    Route::get('/product/{product}', [ProductController::class, 'getSingleData']);
     Route::patch('/product/{product}/delete', [ProductController::class, 'delete'])->name('product.delete');
 });
 
