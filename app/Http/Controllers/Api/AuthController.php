@@ -66,7 +66,11 @@ class AuthController extends Controller
     {
         try {
             $request->user()->tokens()->delete();
-            $cookie = Cookie::forget('token');
+            $cookie = cookie(
+                'token',
+                null,
+                0,
+            );
 
             return response()->json([
                 'status' => true,
