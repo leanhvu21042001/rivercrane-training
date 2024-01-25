@@ -43,11 +43,11 @@ class AuthController extends Controller
                 $user->createToken("API_TOKEN", ['*'], $exp)->plainTextToken,
                 now()->diffInMinutes($exp), // to minutes
                 '/',
-                'localhost',
-                true,
+                '192.168.55.61',
+                false,
                 true,
                 false,
-                'None'
+                'Lax'
             );
 
             return response()->json([
@@ -72,12 +72,11 @@ class AuthController extends Controller
     {
         try {
             $request->user()->tokens()->delete();
-            $cookie = Cookie::forget('token', '/', 'localhost');
+            $cookie = Cookie::forget('token', '/', '192.168.55.61');
 
             return response()->json([
                 'status' => true,
                 'message' => 'Đăng xuất thành công',
-                'cookie' => $cookie
             ], 200)->withCookie($cookie);
         } catch (\Throwable $th) {
             return response()->json([
