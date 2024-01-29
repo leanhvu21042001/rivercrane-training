@@ -37,17 +37,13 @@ class AuthController extends Controller
             $user->last_login_ip = $request->ip();
             $user->save();
 
-            $exp = now()->addWeek();
+            $tokenResult = $user->createToken('PERSONAL_ACCESS_TOKEN', ['*']);
+
+            $expCookie = $tokenResult->token->expires_at->diffInMinutes();
             $cookie = cookie(
-                'token',
-                $user->createToken("API_TOKEN", ['*'], $exp)->plainTextToken,
-                now()->diffInMinutes($exp), // to minutes
-                '/',
-                '192.168.55.61',
-                true,
-                true,
-                false,
-                'None'
+                'accessToken',
+                $tokenResult->accessToken,
+                $expCookie
             );
 
             return response()->json([
@@ -71,8 +67,8 @@ class AuthController extends Controller
     public function logoutUser(Request $request)
     {
         try {
-            $request->user()->tokens()->delete();
-            $cookie = Cookie::forget('token', '/', '192.168.55.61');
+            $request->user()->token()->revoke();
+            $cookie = Cookie::forget('accessToken');
 
             return response()->json([
                 'status' => true,
