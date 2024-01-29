@@ -46,6 +46,7 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => 'Get list product successfully',
             'paginate' => $paginate,
             'minPrice' => $productMinPrice->price,
             'maxPrice' => $productMaxPrice->price,
@@ -75,7 +76,7 @@ class ProductController extends Controller
         $is_sales = $request->input('is_sales');
         $image = $request->input('image');
 
-        $created = Product::create([
+        Product::create([
             'name' => $name,
             'description' => $description,
             'price' => $price,
@@ -86,7 +87,6 @@ class ProductController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Created product',
-            'product' => $created
         ], 201);
     }
 
@@ -105,7 +105,7 @@ class ProductController extends Controller
             'status' => true,
             'message' => 'Get product successfully',
             'product' => $product
-        ], 201);
+        ], 200);
     }
     /**
      * Update the specified resource in storage.
@@ -149,7 +149,6 @@ class ProductController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Updated product',
-            'product' => $updated
         ], 200);
     }
 
@@ -170,7 +169,6 @@ class ProductController extends Controller
         return response()->json([
             'status' => true,
             'message' => "Deleted product",
-            'product' => $deleted,
         ]);
     }
 }
