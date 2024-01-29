@@ -196,6 +196,6 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SECURE_SAME_SITE') ?? 'lax',
+    'same_site' => 'lax',
 
 ];

@@ -43,7 +43,13 @@ class AuthController extends Controller
             $cookie = cookie(
                 'accessToken',
                 $tokenResult->accessToken,
-                $expCookie
+                $expCookie,
+                '/',
+                '192.168.55.61',
+                true,
+                true,
+                false,
+                'none'
             );
 
             return response()->json([
