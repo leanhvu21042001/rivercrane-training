@@ -44,10 +44,10 @@ class AuthController extends Controller
                 now()->diffInMinutes($exp), // to minutes
                 '/',
                 '192.168.55.61',
-                false,
+                true,
                 true,
                 false,
-                'Lax'
+                'None'
             );
 
             return response()->json([
