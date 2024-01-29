@@ -15,7 +15,7 @@ class EnsureTokenIsValid
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $request->headers->set('Authorization', 'Bearer ' . $request->cookie('token'));
+        $request->headers->set('Authorization', 'Bearer ' . $request->cookie('accessToken'));
         return $next($request);
     }
 }
