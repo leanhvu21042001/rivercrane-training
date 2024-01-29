@@ -146,6 +146,15 @@ sudo chmod -R 777 /var/www/intern_it57/storage
 sudo systemctl restart httpd
 ```
 
+## Đổi http qua https
+
+- Thiết lập cho ip
+  - [How To Create an SSL Certificate on Apache for CentOS 7](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-apache-for-centos-7)
+  - > Chú ý cập nhập lại document root, và DirectoryName
+- Thiết lập khi có domain.
+  - [Let's Encrypt](https://letsencrypt.org/vi/docs/)
+  - [How To Secure Apache with Let's Encrypt on CentOS 7](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-centos-7)  
+
 ## Tham khảo
 
 - [How To Install PHP 8 on CentOS 7 | RHEL 8 – 5 Simple Steps](https://www.websitevidya.com/how-to-install-php-8-on-centos-7-rhel-8/)
